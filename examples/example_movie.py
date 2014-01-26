@@ -1,5 +1,5 @@
 # coding=utf-8
-
+from six import u
 from cinemate import Cinemate
 
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
         print(person)
     print(africa.description)
 
-    found = cin.movie.search(u'в поисках')
+    found = cin.movie.search(u('в поисках'))
     for mov in found:
         print(mov)
 

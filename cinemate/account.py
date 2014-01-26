@@ -4,6 +4,7 @@ from .movie import Title
 
 
 class Account(BaseCinemate):
+    @require('username', 'password')
     def auth(self):
         """ Получить passkey
             http://cinemate.cc/help/api/account.auth/

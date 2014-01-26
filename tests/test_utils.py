@@ -5,8 +5,14 @@ from tests.test_cinemate import CinemateTestCase
 
 
 class UtilsTestCase(CinemateTestCase):
+    def test_parse_datetime(self):
+        self.assertEqual(
+            utils.parse_datetime('2011-04-09T15:38:30'),
+            datetime(2011, 4, 9, 15, 38, 30)
+        )
+
     def test_parse_date(self):
-         self.assertEqual(
-             utils.parse_datetime('2011-04-09T15:38:30'),
-             datetime(2011, 4, 9, 15, 38, 30)
-         )
+        self.assertEqual(
+            utils.parse_date('2011-04-07'),
+            datetime(2011, 4, 7)
+        )

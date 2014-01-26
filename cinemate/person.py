@@ -23,7 +23,8 @@ class Photo(BaseCinemate):
         """
         if dct is None:
             return
-        fields = {k: dct.get(k).get('url') for k in cls.fields if k in dct}
+        fields = dict((k, dct.get(k).get('url'))
+                      for k in cls.fields if k in dct)
         return cls(**fields)
 
     def __str__(self):

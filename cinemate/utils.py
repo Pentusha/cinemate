@@ -16,23 +16,23 @@ class BaseCinemate(object):
     pass
 
 
-def require(attr_name=None):
-    """ Декоратор проверяет наличие указаного атрибута у объекта
-    :param attr_name: Имя проверяемого атрибута
-    :typ attr_name: str
+def require(*attr_names):
+    """ Декоратор проверяет наличие указаного атрибута у объекта cinemate
+    :param attr_names: проверяемые атрибуты
+    :typ attr_names: tuple
     """
     def outer_wrapper(func):
         @wraps(func)
         def inner_wrapper(*args, **kwargs):
             instance = getattr(args[0], 'cinemate')
-            attr = getattr(instance, attr_name, None)
-            if attr is None:
+            attrs = (getattr(instance, a, None) for a in attr_names)
+            if not all(attrs):
                 msg = '{attr} required to use {cls}.{method} method'.format(
-                    attr=attr_name,
+                    attr=', '.join(attr_names),
                     cls=args[0].__class__.__name__,
                     method=func.__name__
                 )
-                raise ValueError(msg)
+                raise AttributeError(msg)
             return func(*args, **kwargs)
         return inner_wrapper
     return outer_wrapper

@@ -3,6 +3,7 @@ from datetime import datetime
 from httpretty import activate, register_uri, GET
 from tests.test_cinemate import CinemateTestCase
 from tests.mock import reqresp as rr
+from six import u
 
 
 class AccountTestCase(CinemateTestCase):
@@ -44,7 +45,7 @@ class AccountTestCase(CinemateTestCase):
         self.assertIsInstance(first, dict)
         self.assertEqual(first['date'], datetime(2011, 4, 9, 15, 38, 30))
         self.assertIsInstance(first['for_object'], self.cin.movie)
-        self.assertEqual(first['description'], u'Новая раздача')
+        self.assertEqual(first['description'], u('Новая раздача'))
         self.assertEqual(first['url'], 'http://cinemate.cc/watchlist/a415ef22a4b7ebf24bc54d7ad9a92fa4612cb49f/read/400813/')
         self.assertEqual(first['new'], 1)
 

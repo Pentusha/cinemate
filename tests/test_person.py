@@ -2,6 +2,7 @@
 from httpretty import activate, register_uri, GET
 from tests.test_cinemate import CinemateTestCase
 from tests.mock import reqresp as rr
+from six import u
 from cinemate.person import Photo
 
 
@@ -13,7 +14,7 @@ class PersonTestCase(CinemateTestCase):
                      body=rr['person']['resp'])
         person = self.cin.person.get(3971)
         self.assertIsInstance(person, self.cin.person)
-        self.assertEqual(person.name, u'Джейк Джилленхол')
+        self.assertEqual(person.name, u('Джейк Джилленхол'))
         self.assertEqual(person.name_original, 'Jake Gyllenhaal')
         test_photo = Photo(
             small='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.small.jpg',
@@ -56,13 +57,13 @@ class PersonTestCase(CinemateTestCase):
         register_uri(GET,
                      rr['person.search']['req'],
                      body=rr['person.search']['resp'])
-        lst = self.cin.person.search(u'гиленхол')
+        lst = self.cin.person.search(u('гиленхол'))
         self.assertIsInstance(lst, list)
         self.assertEqual(len(lst), 7)
         person = lst[0]
         self.assertIsInstance(person, self.cin.person)
         self.assertEqual(person.id, 3971)
-        self.assertEqual(person.name, u'Джейк Джилленхол')
+        self.assertEqual(person.name, u('Джейк Джилленхол'))
         self.assertEqual(person.name_original, 'Jake Gyllenhaal')
         test_photo = Photo(
             small='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.small.jpg',

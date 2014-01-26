@@ -96,7 +96,8 @@ class Title(BaseCinemate):
         :return фильм:
         :rtype: ``Movie``
         """
-        attrs = {k: dct.get(v) for k, v in iteritems(cls.fields) if v in dct}
+        attrs = dict((k, dct.get(v))
+                     for k, v in iteritems(cls.fields) if v in dct)
         return cls(**attrs)
 
     def __str__(self):
@@ -132,7 +133,8 @@ class Poster(BaseCinemate):
         :return: Дата релиза
         :rtype: Release
         """
-        return cls(**{k: dct[k].get('url') for k in cls.fields if k in dct})
+        return cls(**dict((k, dct[k].get('url'))
+                          for k in cls.fields if k in dct))
 
     def __str__(self):
         sizes = '/'.join(k for k, v in iteritems(self.__dict__) if k)
@@ -167,7 +169,8 @@ class Release(BaseCinemate):
         :return: Дата релиза
         :rtype: Release
         """
-        attrs = {k: dct.get(v) for k, v in cls.fields.items() if v in dct}
+        attrs = dict((k, dct.get(v))
+                     for k, v in cls.fields.items() if v in dct)
         return cls(**attrs)
 
     def __str__(self):
@@ -358,7 +361,7 @@ class Movie(BaseCinemate):
             'page': kwargs.get('page'),
             'per_page': kwargs.get('per_page'),
         }
-        params = {k: v for k, v in iteritems(params) if v is not None}
+        params = dict((k, v) for k, v in iteritems(params) if v is not None)
         req = cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('movie')
         return list(map(cls.from_dict, movies))
