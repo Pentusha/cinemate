@@ -1,5 +1,5 @@
 [![Build status](https://secure.travis-ci.org/Pentusha/cinemate.png?branch=master)](https://travis-ci.org/Pentusha/cinemate)
-[![PyPI version](https://badge.fury.io/py/cinemate.png)](http://badge.fury.io/py/cinemate)
+[![PyPI version](http://badge.fury.io/py/cinemate.png)](http://badge.fury.io/py/cinemate)
 
 Cinemate - реализация API сайта [сinemate.cc][cinemate] на языке python.
 Реализация использует методы [api v2][api].
