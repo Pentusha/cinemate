@@ -210,8 +210,6 @@ class Movie(BaseCinemate):
         'imdb', 'kinopoisk', 'country', 'genre', 'director', 'cast', 'trailer',
         'url',
     )
-    repr_fields = ('id', 'title', 'year',)
-    id_field = 'id'
 
     def __init__(self, movie_id, **kwargs):
         """

@@ -25,7 +25,7 @@ def require(*attr_names):
         @wraps(func)
         def inner_wrapper(*args, **kwargs):
             instance = getattr(args[0], 'cinemate')
-            attrs = (getattr(instance, a, None) for a in attr_names)
+            attrs = (hasattr(instance, a) for a in attr_names)
             if not all(attrs):
                 msg = '{attr} required to use {cls}.{method} method'.format(
                     attr=', '.join(attr_names),
@@ -39,11 +39,9 @@ def require(*attr_names):
 
 
 def parse_datetime(source):
-    """ Парсинг дат и времени формата (вот четсно: хуй знает какого формата, мне лень
-        искать название, но он существует)
-        Пример: 2011-04-09T15:38:30
-        :param source: Исходная строка с датой
-        :type source: str
+    """ Парсинг дат и времени формата ISO. Например: 2011-04-09T15:38:30
+    :param source: Исходная строка с датой
+    :type source: str
     """
     if not source:
         return

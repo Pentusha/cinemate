@@ -1,4 +1,5 @@
 [![Build status](https://secure.travis-ci.org/Pentusha/cinemate.png?branch=master)](https://travis-ci.org/Pentusha/cinemate)
+[![PyPI version](https://badge.fury.io/py/cinemate.png)](http://badge.fury.io/py/cinemate)
 
 Cinemate - реализация API сайта [сinemate.cc][cinemate] на языке python.
 Реализация использует методы [api v2][api].
@@ -63,7 +64,7 @@ print(movie.runtime)
 ## Участие в разработке
 Проверяйте внесенные изменения на соответсвие [pep-20][pep20], [pep-8][pep8], [pep-287][pep287].
 Пожалуйста, документируйте код на русском языке, т.к. проект cinemate.cc рассчитан на росскоговорящую аудиторию.
-Тесты должны выполняться в версиях python2.7, python3.3, python3.4.
+Тесты должны выполняться в версиях py27, py32, py33, py34.
 В остальном никаких особенностей нет, форкаете, меняете, pull-request.
 
 [cinemate]: http://cinemate.cc/
