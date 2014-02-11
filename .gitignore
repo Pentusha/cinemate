@@ -17,6 +17,10 @@ var/
 .installed.cfg
 *.egg
 
+# py.test
+*,cover
+.coverage
+
 # Vagrant
 Vagrantfile
 .vagrant

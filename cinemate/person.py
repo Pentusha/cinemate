@@ -1,5 +1,5 @@
 # coding=utf-8
-from six import iteritems, PY2
+from six import iteritems
 from .utils import require, BaseCinemate
 
 
@@ -27,9 +27,9 @@ class Photo(BaseCinemate):
                       for k in cls.fields if k in dct)
         return cls(**fields)
 
-    def __str__(self):
-        sizes = '/'.join(k for k, v in iteritems(self.__dict__) if k)
-        return '<Poster {sizes}>'.format(sizes=sizes)
+    def __unicode__(self):
+        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
+        return '<Photo {sizes}>'.format(sizes=sizes)
 
 
 class Person(BaseCinemate):
@@ -62,17 +62,13 @@ class Person(BaseCinemate):
             http://cinemate.cc/help/api/person/
         :return: персона
         :rtype: Person
-        :raises: RuntimeError
         """
         url = 'person'
         cinemate = getattr(self, 'cinemate')
         params = {'id': self.id}
         req = cinemate.api_get(url, apikey=True, params=params)
         person = req.json().get('person')
-        error = req.json().get('error')
-        if not person and error:
-            raise RuntimeError(error)
-        return cinemate.person.from_dict(req.json().get('person'))
+        return cinemate.person.from_dict(person)
 
     @classmethod
     @require('apikey')
@@ -122,12 +118,8 @@ class Person(BaseCinemate):
         persons = req.json().get('person', [])
         return list(map(cls.from_dict, persons))
 
-    def __str__(self):
-        fields = [str(self.id)]
-        if self.name:
-            fields.append(self.name)
+    def __unicode__(self):
+        fields = str(self.id), self.name_original or self.name
         fields = ' '.join(fields)
-        if PY2:
-            fields = fields.encode('utf-8')
         return '<Person {fields}>'.format(fields=fields)
 

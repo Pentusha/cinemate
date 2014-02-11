@@ -1,7 +1,8 @@
 # coding=utf-8
-from six import iteritems, PY2
+from six import iteritems
 from six.moves import map
 from .utils import require, parse_date, BaseCinemate
+from .lists import countries, genres
 
 
 class Country(BaseCinemate):
@@ -16,7 +17,7 @@ class Country(BaseCinemate):
         :type slug: str
         """
         self.name = name
-        self.slug = slug
+        self.slug = slug or self.__class__.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
@@ -26,13 +27,24 @@ class Country(BaseCinemate):
         :return страна
         :rtype: ``Country``
         """
-        return cls(name=dct.get('name'), slug=dct.get('slug'))
+        slug = dct.get('slug')
+        name = dct.get('name')
+        if not slug:
+            slug = cls.slug_by_name(name)
+        return cls(name=name, slug=slug)
 
-    def __str__(self):
-        name = self.slug or self.name
-        if PY2:
-            name = name.encode('utf-8')
-        return '<Country: {name}>'.format(name=name)
+    @classmethod
+    def slug_by_name(cls, name):
+        """ Получениу slug страны по её названию на русском языке
+        :param name: Имя страны на русском языке
+        :return: slug страны
+        :rtype: str
+        """
+        finder = (slug for slug, rus in iteritems(countries) if rus == name)
+        return next(finder, None)
+
+    def __unicode__(self):
+        return '<Country: {name}>'.format(name=self.slug or self.name)
 
 
 class Genre(BaseCinemate):
@@ -47,7 +59,7 @@ class Genre(BaseCinemate):
         :type slug: str
         """
         self.name = name
-        self.slug = slug
+        self.slug = slug or self.__class__.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
@@ -59,11 +71,18 @@ class Genre(BaseCinemate):
         """
         return cls(name=dct.get('name'), slug=dct.get('slug'))
 
-    def __str__(self):
-        name = self.slug or self.name
-        if PY2:
-            name = name.encode('utf-8')
-        return '<Genre: {name}>'.format(name=name)
+    @classmethod
+    def slug_by_name(cls, name):
+        """ Получениу slug жанра по его названию на русском языке
+        :param name: Имя жанра на русском языке
+        :return: slug страны
+        :rtype: str
+        """
+        finder = (slug for slug, rus in iteritems(genres) if rus == name)
+        return next(finder, None)
+
+    def __unicode__(self):
+        return '<Genre: {name}>'.format(name=self.slug or self.name)
 
 
 class Title(BaseCinemate):
@@ -101,10 +120,7 @@ class Title(BaseCinemate):
         return cls(**attrs)
 
     def __str__(self):
-        name = self.russian
-        if PY2:
-            name = name.encode('UTF-8')
-        return name
+        return self.original or self.russian
 
 
 class Poster(BaseCinemate):
@@ -136,8 +152,8 @@ class Poster(BaseCinemate):
         return cls(**dict((k, dct[k].get('url'))
                           for k in cls.fields if k in dct))
 
-    def __str__(self):
-        sizes = '/'.join(k for k, v in iteritems(self.__dict__) if k)
+    def __unicode__(self):
+        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
         return '<Poster {sizes}>'.format(sizes=sizes)
 
 
@@ -161,20 +177,8 @@ class Release(BaseCinemate):
         self.world = parse_date(world)
         self.russia = parse_date(russia)
 
-    @classmethod
-    def from_dict(cls, dct):
-        """ Дата релиза из словаря, возвращаемого API
-        :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return: Дата релиза
-        :rtype: Release
-        """
-        attrs = dict((k, dct.get(v))
-                     for k, v in cls.fields.items() if v in dct)
-        return cls(**attrs)
-
-    def __str__(self):
-        fields = '/'.join(k for k, v in iteritems(self.__dict__) if k)
+    def __unicode__(self):
+        fields = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
         return '<Release {fields}>'.format(fields=fields)
 
 
@@ -194,7 +198,7 @@ class Rating(BaseCinemate):
         self.votes = int(votes)
         self.rating = float(rating)
 
-    def __str__(self):
+    def __unicode__(self):
         return '<Rating rating={rating:.1f} votes={votes}>'.format(
             rating=self.rating,
             votes=self.votes
@@ -239,16 +243,16 @@ class Movie(BaseCinemate):
             dct.get('release_date_world'),
             dct.get('release_date_russia')
         )
-        genres = dct.get('genre', [])
-        countries = dct.get('country', [])
+        genre = dct.get('genre', [])
+        country = dct.get('country', [])
         if isinstance(cast, dict):
             cast = (cast, )
         if isinstance(director, dict):
             director = (director, )
-        if isinstance(genres, dict):
-            genres = (genres, )
-        if isinstance(countries, dict):
-            countries = (countries, )
+        if isinstance(genre, dict):
+            genre = (genre, )
+        if isinstance(country, dict):
+            country = (country, )
         return cls(
             movie_id,
             title=Title.from_dict(dct),
@@ -262,8 +266,8 @@ class Movie(BaseCinemate):
             runtime=dct.get('runtime'),
             trailer=dct.get('trailer'),
             url=dct.get('url'),
-            genre=list(map(Genre.from_dict, genres)),
-            country=list(map(Country.from_dict, countries)),
+            genre=list(map(Genre.from_dict, genre)),
+            country=list(map(Country.from_dict, country)),
             cast=list(map(cinemate.person.from_dict, cast)),
             director=list(map(cinemate.person.from_dict, director)),
         )
@@ -295,22 +299,18 @@ class Movie(BaseCinemate):
 
     @classmethod
     @require('apikey')
-    def search(cls, term, year=None):
+    def search(cls, term):
         """ Поиск по заголовкам фильмов.
             Поддерживается уточняющий поиск по году выхода фильма и
             коррекцию ошибок при печати
             http://cinemate.cc/help/api/movie.search/
         :param term: искомая строка
         :type term: str
-        :param year: год выхода фильма
-        :type year: int
         :return: список фильов
         :rtype: list
         """
         url = 'movie.search'
         cinemate = getattr(cls, 'cinemate')
-        if year is not None:
-            term = '{term} {year}'.format(term=term, year=year)
         params = {'term': term}
         req = cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('movie', [])
@@ -364,13 +364,7 @@ class Movie(BaseCinemate):
         movies = req.json().get('movie')
         return list(map(cls.from_dict, movies))
 
-    def __str__(self):
-        fields = [str(self.id)]
-        if self.title.russian:
-            fields.append(self.title.russian)
+    def __unicode__(self):
+        fields = str(self.id), self.title.original or self.title.russian
         fields = ' '.join(fields)
-        if PY2:
-            fields = fields.encode('utf-8')
         return '<Movie {fields}>'.format(fields=fields)
-
-

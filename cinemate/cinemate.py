@@ -51,7 +51,7 @@ class Cinemate(BaseCinemate):
             params['passkey'] = self.passkey
         if apikey:
             params['apikey'] = self.apikey
-        req = http_get(url, params=params, **kwargs)
+        req = http_get(url, params={} if full_url else params, **kwargs)
         if req.status_code != codes.ok:
             msg = 'cinemate return invalid status code {code} for {url}'
             raise RuntimeError(msg.format(code=req.status_code, url=req.url))
@@ -60,5 +60,5 @@ class Cinemate(BaseCinemate):
             raise RuntimeError(error)
         return req
 
-    def __str__(self):
+    def __unicode__(self):
         return '<Cinemate: {username}>'.format(username=self.username)

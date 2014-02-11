@@ -1,7 +1,7 @@
 # coding=utf-8
 from datetime import datetime
 from functools import wraps
-from six import add_metaclass
+from six import add_metaclass, PY2
 
 
 class CommonMeta(type):
@@ -13,7 +13,11 @@ class BaseCinemate(object):
     """ Заглушка для будущего добавления __служебных_методов__
         Для этого же в классах перечислены repr_fields, id_field, full_repr
     """
-    pass
+    def __str__(self):
+        if PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
 
 
 def require(*attr_names):

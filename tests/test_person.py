@@ -22,10 +22,12 @@ class PersonTestCase(CinemateTestCase):
             big='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.big.jpg'
         )
         self.assertIsInstance(person.photo, Photo)
+        self.assertEqual(str(person.photo), '<Photo big/medium/small>')
         self.assertEqual(person.photo.small, test_photo.small)
         self.assertEqual(person.photo.medium, test_photo.medium)
         self.assertEqual(person.photo.big, test_photo.big)
         self.assertEqual(person.url, 'http://cinemate.cc/person/3971/')
+        self.assertEqual(str(person), '<Person 3971 Jake Gyllenhaal>')
 
     @activate
     def test_person_movies(self):

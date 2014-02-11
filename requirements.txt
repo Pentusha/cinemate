@@ -3,3 +3,5 @@ six
 tox
 HTTPretty
 pytest
+pytest-cov
+coveralls
