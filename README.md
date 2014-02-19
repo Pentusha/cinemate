@@ -31,7 +31,7 @@ Cinemate - реализация API сайта [сinemate.cc][cinemate] на я�
 ```python
 >>> person = cin.person.get(57658)
 >>> print(person)
-<Person 57658 Ноэль Филдинг>
+<Person 57658 Noel Fielding>
 >>> print(person.photo.big)
 http://c.cinemate.cc/media/p/8/5/57658/0.big.jpg
 ```
@@ -40,10 +40,11 @@ http://c.cinemate.cc/media/p/8/5/57658/0.big.jpg
 
 ```python
 >>> print(movie)
-<Movie 114458 Африка>
+<Movie 114458 Africa>
 >>> print(movie.title.original)
 Africa
-print(movie.runtime)
+>>> movie.runtime is None
+True
 >>> print(movie.imdb)
 <Rating rating=8.9 votes=1984>
 >>> print(movie.imdb.rating)
@@ -55,12 +56,12 @@ print(movie.runtime)
 ```python
 >>> watchlist = cin.account.watchlist()
 >>> for person in watchlist['person']:
-...     print(person.name)
+...     print(person.name_original)
 ...
-Вонг Кар Вай
-Грегг Араки
-Ян Шванкмайер
-Гаспар Ноэ
+Kar Wai Wong
+Gregg Araki
+Jan Svankmajer
+Gaspar Noe
 ```
 
 Участие в разработке
