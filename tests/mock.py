@@ -1,4 +1,7 @@
 # coding=utf-8
+""" Модуль содержит запросы и сохранённые ответы сервера для тестирования.
+    Чтобы проверить валидность json можно просто запустить модуль.
+"""
 from six import u
 from requests.status_codes import codes
 import json
@@ -84,6 +87,7 @@ reqresp = {
         'status': codes.not_found,
     },
 }
+
 
 if __name__ == '__main__':
     for k, v in reqresp.items():

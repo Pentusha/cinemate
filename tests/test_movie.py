@@ -110,7 +110,6 @@ class MovieTestCase(CinemateTestCase):
             order_to=datetime(1989, 7, 4),
         )
 
-
     @activate
     def test_movie_search(self):
         register_uri(GET,
