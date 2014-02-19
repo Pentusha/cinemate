@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Реализация API cinemate.cc на языке python.
+Реализация API сайта cinemate.cc на языке python.
 """
 import os
 from setuptools import setup, find_packages
@@ -40,10 +40,7 @@ setup(
     long_description=__doc__,
     requires=('requests', 'six'),
     packages=find_packages(),
-    install_requires=(
-        'requests',
-        'six',
-    ),
+    install_requires=('requests', 'six'),
     tests_require=(
         'requests',
         'six',

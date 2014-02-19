@@ -1,4 +1,9 @@
 # coding=utf-8
+""" Пример показывает как использовать следующие методы api:
+    * person
+    * person.movies
+    * person.search
+"""
 from cinemate import Cinemate
 from six import u
 

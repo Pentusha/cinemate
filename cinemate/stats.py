@@ -1,4 +1,11 @@
 # coding=utf-8
+"""
+    cinemate.stats
+    ~~~~~~~~~~~~~~
+
+    Модуль реализует класс Stats для получения статистики сайта.
+
+"""
 from .utils import BaseCinemate
 
 

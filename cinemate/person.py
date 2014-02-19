@@ -1,4 +1,12 @@
 # coding=utf-8
+"""
+    cinemate.person
+    ~~~~~~~~~~~~~~~
+
+    Модуль реализует класс персоны Person,
+    а также класс фотографии персоны Photo
+
+"""
 from six import iteritems
 from .utils import require, BaseCinemate
 
@@ -23,8 +31,7 @@ class Photo(BaseCinemate):
         """
         if dct is None:
             return
-        fields = dict((k, dct.get(k).get('url'))
-                      for k in cls.fields if k in dct)
+        fields = {k: dct.get(k).get('url') for k in cls.fields if k in dct}
         return cls(**fields)
 
     def __unicode__(self):
@@ -48,6 +55,12 @@ class Person(BaseCinemate):
 
     @classmethod
     def from_dict(cls, dct):
+        """ Информация о персоне из словаря, возвращаемого API
+        :param dct: словарь, возвращаемый API
+        :type dct: dict
+        :return: Персона
+        :rtype: Person
+        """
         return cls(
             person_id=dct.get('id') or dct.get('attrib').get('id'),
             name=dct.get('name') or dct.get('value'),

@@ -1,4 +1,7 @@
 # coding=utf-8
+""" Пример показывает как использовать следующие методы api:
+    * stats.new
+"""
 from cinemate import Cinemate
 
 

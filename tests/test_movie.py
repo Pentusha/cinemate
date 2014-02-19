@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import date, datetime
 from cinemate.movie import Title, Poster, Release, Rating, Country, Genre
 from httpretty import activate, register_uri, GET
 from six import u
@@ -79,7 +80,6 @@ class MovieTestCase(CinemateTestCase):
         mov = self.cin.movie.get(147668)
         self.assertIsInstance(mov.cast, list)
 
-
     @activate
     def test_movie_list(self):
         register_uri(GET,
@@ -90,6 +90,26 @@ class MovieTestCase(CinemateTestCase):
         self.assertEqual(len(lst), 10)
         self.assertIsInstance(lst[0], self.cin.movie)
         self.assertEqual(lst[0].id, 131001)
+
+        register_uri(GET,
+                     rr['movie.list_with_params']['req'],
+                     body=rr['movie.list_with_params']['resp'])
+        lst = self.cin.movie.list(
+            order_from=date(1988, 7, 4),
+            order_to=datetime(1989, 7, 4),
+            order_by='release_date'
+        )
+        self.assertIsInstance(lst, list)
+        self.assertEqual(len(lst), 10)
+        self.assertIsInstance(lst[0], self.cin.movie)
+        self.assertEqual(lst[0].id, 24424)
+        self.assertRaises(
+            ValueError,
+            self.cin.movie.list,
+            order_from=date(1988, 7, 4),
+            order_to=datetime(1989, 7, 4),
+        )
+
 
     @activate
     def test_movie_search(self):

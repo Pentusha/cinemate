@@ -1,4 +1,13 @@
 # coding=utf-8
+"""
+    cinemate.movie
+    ~~~~~~~~~~~~~~
+
+    Модуль реализует класс фильма Movie, а также сопутствующие
+    Country, Genre, Title, Poster, Release, Rating
+
+"""
+from datetime import date, datetime
 from six import iteritems
 from six.moves import map
 from .utils import require, parse_date, BaseCinemate
@@ -115,8 +124,7 @@ class Title(BaseCinemate):
         :return фильм:
         :rtype: ``Movie``
         """
-        attrs = dict((k, dct.get(v))
-                     for k, v in iteritems(cls.fields) if v in dct)
+        attrs = {k: dct.get(v) for k, v in iteritems(cls.fields) if v in dct}
         return cls(**attrs)
 
     def __str__(self):
@@ -149,8 +157,7 @@ class Poster(BaseCinemate):
         :return: Дата релиза
         :rtype: Release
         """
-        return cls(**dict((k, dct[k].get('url'))
-                          for k in cls.fields if k in dct))
+        return cls(**{k: dct[k].get('url') for k in cls.fields if k in dct})
 
     def __unicode__(self):
         sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
@@ -322,44 +329,65 @@ class Movie(BaseCinemate):
         """ Результаты поиска фильмов, используя заданные фильтры.
             Возвращается 10 первых фильмов
             http://cinemate.cc/help/api/movie.list/
+        :param kwargs: именованные фильтры
+        :type kwargs: dict
         :param type: тип фильмов. Возможные значения: movie, serial, short
         :type type: str
         :param year: год выпуска фильма или сериала
         :type year: int
         :param genre: slug жанра http://cinemate.cc/movie/genre/
-        :type genre: str
+        :type genre: str or ``cinemate.Genre``
         :param country: slug страны http://cinemate.cc/movie/country/
-        :type country: str
+        :type country: str or ``cinemate.Country``
         :param order_by: критерий сортировки:
                          create_date, release_date, ru_release_date
         :type order_by: str
         :param order: порядок сортировки параметра order_by: desc, asc
         :type order: str
-        :param order_from: начальная дата среза параметра order_by
-        :type order_from: datetime.date
-        :param order_to: конечная дата среза параметра order_by
-        :type order_to: datetime.date
+        :param order_from: начальная дата среза параметра ``order_by``
+            в формате ДД.ММ.ГГГГ
+        :type order_from: datetime.date or str
+        :param order_to: конечная дата среза параметра ``order_by``
+            в формате ДД.ММ.ГГГГ
+        :type order_to: datetime.date or str
         :param page: страница в выборке (по умолчанию 0)
         :type page: int
         :param per_page: записей в выборке (по умолчанию 10, максимум 25)
-        :type per_page: ints
+        :type per_page: int
         :return: Список фильмов
         :rtype: list
+        :raises ValueError: вызывается если указан один из параметров
+            ``order_to``/``order_from``, но не указан ``order_by``
         """
-        url = 'movie.list'
-        cinemate = getattr(cls, 'cinemate')
+        country = kwargs.get('country')
+        genre = kwargs.get('genre')
+        order_by = kwargs.get('order_by')
+        order_from = kwargs.get('order_from')
+        order_to = kwargs.get('order_to')
+        if isinstance(order_from, (date, datetime)):
+            order_from = order_from.strftime('%d.%m.%Y')
+        if isinstance(order_to, (date, datetime)):
+            order_to = order_to.strftime('%d.%m.%Y')
+        if (order_to or order_from) and not order_by:
+            msg = (
+                'You must specify order_by parameter '
+                'if you are using order_to or order_from'
+            )
+            raise ValueError(msg)
         params = {
             'year': kwargs.get('year'),
-            'genre': kwargs.get('genre'),
-            'country': kwargs.get('country'),
-            'order_by': kwargs.get('order_by'),
+            'genre': genre or getattr(genre, 'slug', None),
+            'country': country or getattr(country, 'slug', None),
+            'order_by': order_by,
             'order': kwargs.get('order'),
-            'from': kwargs.get('order_from'),
-            'to': kwargs.get('order_to'),
+            'from': order_from,
+            'to': order_to,
             'page': kwargs.get('page'),
             'per_page': kwargs.get('per_page'),
         }
-        params = dict((k, v) for k, v in iteritems(params) if v is not None)
+        url = 'movie.list'
+        cinemate = getattr(cls, 'cinemate')
+        params = {k: v for k, v in iteritems(params) if v is not None}
         req = cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('movie')
         return list(map(cls.from_dict, movies))

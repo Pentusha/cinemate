@@ -1,4 +1,9 @@
 # coding=utf-8
+""" Пример показывает как использовать следующие методы api:
+    * movie
+    * movie.list
+    * movie.search
+"""
 from six import u
 from cinemate import Cinemate
 
@@ -20,6 +25,11 @@ if __name__ == '__main__':
     for mov in found:
         print(mov)
 
-    lst = cin.movie.list(year=2010, country='russia', per_page=25)
+    documentary = africa.genre[0]
+    print(documentary)
+
+    lst = cin.movie.list(year=2010, genre=documentary, per_page=25)
+    # аналогично cin.movie.list(year=2010, genre='documentary', per_page=25)
+    # жанры и страны хранятся в cinemate.genres и cinemate.countries
     for mov in lst:
         print(mov)

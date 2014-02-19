@@ -1,6 +1,7 @@
 [![PyPI version](http://badge.fury.io/py/cinemate.png)](http://badge.fury.io/py/cinemate)
 [![Build status](http://secure.travis-ci.org/Pentusha/cinemate.png?branch=master)](https://travis-ci.org/Pentusha/cinemate)
 [![Tests Coverage](http://coveralls.io/repos/Pentusha/cinemate/badge.png?branch=master)](https://coveralls.io/r/Pentusha/cinemate)
+[![Wheel Status](http://pypip.in/wheel/cinemate/badge.png)](https://pypi.python.org/pypi/cinemate/)
 
 Cinemate - реализация API сайта [сinemate.cc][cinemate] на языке python.
 Реализация использует методы [api v2][api].
@@ -8,7 +9,6 @@ Cinemate - реализация API сайта [сinemate.cc][cinemate] на я�
 
 Установка
 =========
-
 Используйте слудуюую команду для получения последней версии
 
     pip install cinemate
@@ -17,7 +17,6 @@ Cinemate - реализация API сайта [сinemate.cc][cinemate] на я�
 
 Использование
 =============
-
 Ниже приведены простые примеры, подробные примеры находятся в каталоге `examples`
 
 Инициализация:

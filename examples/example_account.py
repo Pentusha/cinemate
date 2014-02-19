@@ -1,4 +1,10 @@
 # coding=utf-8
+""" Пример показывает как использовать следующие методы api:
+    * account.auth
+    * account.profile
+    * account.updatelist
+    * account.watchlist
+"""
 from cinemate import Cinemate
 
 

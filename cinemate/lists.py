@@ -1,7 +1,14 @@
 #coding=utf-8
+"""
+    cinemate.lists
+    ~~~~~~~~~~~~~~~~~
+
+    Модуль содержит словари countries, genres для получения slug
+
+"""
 from six import u
 
-
+# список стран http://cinemate.cc/movie/country/
 countries = {
     'austria': u('Австрия'),
     'azerbaijan': u('Азербайджан'),
@@ -159,7 +166,7 @@ countries = {
     'japan': u('Япония'),
 }
 
-
+# список жанров http://cinemate.cc/movie/genre/
 genres = {
     'anime': u('аниме'),
     'biography': u('биография'),

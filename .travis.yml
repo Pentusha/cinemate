@@ -8,6 +8,6 @@ python:
 install: "pip install -r requirements.txt"
 # command to run tests
 script:
-  - py.test
+  - py.test --cov cinemate tests/ --cov-report annotate
 after_success:
   - coveralls

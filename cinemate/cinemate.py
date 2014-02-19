@@ -1,5 +1,11 @@
 # coding=utf-8
+"""
+    cinemate.cinemate
+    ~~~~~~~~~~~~~~~~~
 
+    Модуль реализует класс Cinemate для хранения пользовательских данных.
+
+"""
 from requests import get as http_get
 from requests.status_codes import codes
 from .utils import BaseCinemate
@@ -10,6 +16,9 @@ from .stats import Stats
 
 
 class Cinemate(BaseCinemate):
+    """ Класс для хранения пользовательских настроек, таких как
+        имя пользователя, пароль, passkey, apikey.
+    """
     base_url = 'http://api.cinemate.cc/'
 
     def __init__(self, username, password, passkey, apikey):
@@ -33,15 +42,17 @@ class Cinemate(BaseCinemate):
         self.account = type('Account', (Account,), {'cinemate': self})()
 
     def api_get(self, url, passkey=False, apikey=False, **kwargs):
-        """ Получить фтраницу api или сайта
+        """ Получить страницу api или сайта
         :param url: адрес получаемой страницы, полностью или p/a/th?param=1
         :type url: str
-        :param passkey: Использовать для запроса passkey
+        :param passkey: использовать для запроса passkey
         :type passkey: bool
-        :param apikey: Использовать для запроса apikey
+        :param apikey: использовать для запроса apikey
+        :param kwargs: остальные параметры отправляемые в requests.get
         :type apikey: bool
         :return: ответ на запрос
-        :raises: RuntimeError
+        :raises RuntimeError: вызывается в если в ответе приходит блок error
+            или если запрос возвращает некорректный http-статус
         """
         full_url = url.startswith('http://')
         url = full_url and url or self.base_url + url.lstrip('/')

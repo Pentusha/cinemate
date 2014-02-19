@@ -1,9 +1,18 @@
 # coding=utf-8
+"""
+    cinemate.account
+    ~~~~~~~~~~~~~~~~
+
+    Модуль реализует класс Account для получения пользовательской информации.
+
+"""
 from .utils import BaseCinemate, require, parse_datetime
 from .movie import Title
 
 
 class Account(BaseCinemate):
+    """ Класс для получения пользовательских данных
+    """
     @require('username', 'password')
     def auth(self):
         """ Получить passkey
