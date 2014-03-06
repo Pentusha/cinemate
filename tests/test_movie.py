@@ -62,7 +62,7 @@ class MovieTestCase(CinemateTestCase):
         test_director = self.cin.person(163239, name=u('Малькольм Венвилль'))
         self.assertIsInstance(mov.director, list)
         self.assertEqual(len(mov.director), 1)
-        #self.assertEqual(mov.director[0], u('<Person Малькольм Венвилль>'))
+        #self.assertEqual(mov.director[0], u('<Person 163239 Малькольм Венвилль>'))
         self.assertIsInstance(mov.director[0], self.cin.person)
         self.assertEqual(mov.director[0].name, test_director.name)
         test_actor = self.cin.person(2624, name=u('Киану Ривз'))

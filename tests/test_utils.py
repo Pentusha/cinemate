@@ -25,3 +25,17 @@ class UtilsTestCase(CinemateTestCase):
             'decorated': utils.require('test')(lambda: None)
         })
         self.assertRaises(AttributeError, dummy().decorated)
+
+    def test_get_cinemate(self):
+        dummy1 = type('Cinemate', (object,), {})
+        dummy2 = type('Dummy', (object,), {'cinemate': self.cin})
+        dummy3 = type('Mummy', (object,), {})
+        try:
+            utils.__get_cinemate__(dummy1())
+        except AttributeError:
+            self.fail('Dummy1 raises AttributeError')
+        try:
+            utils.__get_cinemate__(dummy2())
+        except AttributeError:
+            self.fail('Dummy2 raises AttributeError')
+        self.assertRaises(AttributeError, utils.__get_cinemate__, dummy3())

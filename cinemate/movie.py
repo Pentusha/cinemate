@@ -127,8 +127,8 @@ class Title(BaseCinemate):
         attrs = {k: dct.get(v) for k, v in iteritems(cls.fields) if v in dct}
         return cls(**attrs)
 
-    def __str__(self):
-        return self.original or self.russian
+    def __unicode__(self):
+        return self.original or self.russian or ''
 
 
 class Poster(BaseCinemate):
@@ -323,6 +323,7 @@ class Movie(BaseCinemate):
         movies = req.json().get('movie', [])
         return list(map(cls.from_dict, movies))
 
+    # noinspection PyDocstring
     @classmethod
     @require('apikey')
     def list(cls, **kwargs):

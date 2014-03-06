@@ -19,7 +19,7 @@ class Cinemate(BaseCinemate):
     """ Класс для хранения пользовательских настроек, таких как
         имя пользователя, пароль, passkey, apikey.
     """
-    base_url = 'http://api.cinemate.cc/'
+    base_api_url = 'http://api.cinemate.cc/'
 
     def __init__(self, username, password, passkey, apikey):
         """ Инициация главного класса, все остальные создаются внутри.
@@ -42,20 +42,21 @@ class Cinemate(BaseCinemate):
         self.account = type('Account', (Account,), {'cinemate': self})()
 
     def api_get(self, url, passkey=False, apikey=False, **kwargs):
-        """ Получить страницу api или сайта
+        """ Получить страницу api
         :param url: адрес получаемой страницы, полностью или p/a/th?param=1
         :type url: str
         :param passkey: использовать для запроса passkey
         :type passkey: bool
         :param apikey: использовать для запроса apikey
-        :param kwargs: остальные параметры отправляемые в requests.get
         :type apikey: bool
+        :param kwargs: остальные параметры отправляемые в requests.get
+        :type kwargs dict:
         :return: ответ на запрос
         :raises RuntimeError: вызывается в если в ответе приходит блок error
             или если запрос возвращает некорректный http-статус
         """
         full_url = url.startswith('http://')
-        url = full_url and url or self.base_url + url.lstrip('/')
+        url = full_url and url or self.base_api_url + url.lstrip('/')
         params = kwargs.pop('params', {})
         params['format'] = 'json'
         if passkey:

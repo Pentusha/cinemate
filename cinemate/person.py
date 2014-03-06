@@ -80,7 +80,7 @@ class Person(BaseCinemate):
         cinemate = getattr(self, 'cinemate')
         params = {'id': self.id}
         req = cinemate.api_get(url, apikey=True, params=params)
-        person = req.json().get('person')
+        person = req.json().get('person', {})
         return cinemate.person.from_dict(person)
 
     @classmethod
@@ -121,7 +121,7 @@ class Person(BaseCinemate):
             http://cinemate.cc/help/api/movie.search/
         :param term: искомая строка; поддерживает коррекцию ошибок при печати
         :type term: str
-        :return:  список персон
+        :return: список персон
         :rtype: list
         """
         url = 'person.search'

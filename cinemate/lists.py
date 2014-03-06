@@ -22,7 +22,7 @@ countries = {
     'bangladesh': u('Бангладеш'),
     'barbados': u('Барбадос'),
     'bahrain': u('Бахрейн'),
-    'belarus': u('Белоруссия'),
+    'belarus': u('Беларусь'),
     'belgium': u('Бельгия'),
     'ivory-coast': u('Берег Слоновой Кости'),
     'bulgaria': u('Болгария'),
