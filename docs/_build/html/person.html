@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Актеры и режиссеры &mdash; Документация cinemate 0.0.7</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Документация cinemate 0.0.7" href="index.html" />
+    <link rel="next" title="Доступ к пользовательским данным" href="account.html" />
+    <link rel="prev" title="Фильмы" href="movie.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Просмотр</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="account.html" title="Доступ к пользовательским данным"
+             accesskey="N">следующий</a> |</li>
+        <li class="right" >
+          <a href="movie.html" title="Фильмы"
+             accesskey="P">предыдущий</a> |</li>
+        <li><a href="index.html">Документация cinemate 0.0.7</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>Актеры и режиссеры<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<dl class="class">
+<dt id="cinemate.Person">
+<em class="property">class </em><tt class="descclassname">cinemate.</tt><tt class="descname">Person</tt><big>(</big><em>person_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#cinemate.Person" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс персоны.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first last simple">
+<li><strong>person_id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>) &#8211; идентификатор персоны на cinemate.cc</li>
+<li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; русскоязычное имя персоны</li>
+<li><strong>name_original</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; имя персоны в оригинале</li>
+<li><strong>photo</strong> (<a class="reference internal" href="#cinemate.Photo" title="cinemate.Photo"><tt class="xref py py-class docutils literal"><span class="pre">Photo</span></tt></a>) &#8211; фотграфия персоны</li>
+<li><strong>url</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; ссылка на страницу персоны</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="cinemate.Person.fetch">
+<tt class="descname">fetch</tt><big>(</big><big>)</big><a class="headerlink" href="#cinemate.Person.fetch" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод API <a class="reference external" href="http://cinemate.cc/help/api/person/">person</a>
+получает полную информацию о персоне</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Результат:</th><td class="field-body">персона</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference internal" href="#cinemate.Person" title="cinemate.Person"><tt class="xref py py-class docutils literal"><span class="pre">Person</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cinemate.Person.from_dict">
+<em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>dct</em><big>)</big><a class="headerlink" href="#cinemate.Person.from_dict" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Информация о персоне из словаря, возвращаемого API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>dct</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; словарь, возвращаемый API</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">персона</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference internal" href="#cinemate.Person" title="cinemate.Person"><tt class="xref py py-class docutils literal"><span class="pre">Person</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cinemate.Person.get">
+<em class="property">classmethod </em><tt class="descname">get</tt><big>(</big><em>person_id</em><big>)</big><a class="headerlink" href="#cinemate.Person.get" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Короткий аналог person(123).fetch()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>person_id</strong> (<tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>) &#8211; идентификатор персоны</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">персона</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference internal" href="#cinemate.Person" title="cinemate.Person"><tt class="xref py py-class docutils literal"><span class="pre">Person</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cinemate.Person.movies">
+<tt class="descname">movies</tt><big>(</big><big>)</big><a class="headerlink" href="#cinemate.Person.movies" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод API
+<a class="reference external" href="http://cinemate.cc/help/api/person.movies/">person.movies</a>
+возвращает фильмы, в съемке которых персона принимала участие
+в качестве актера или режиссера.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Результат:</th><td class="field-body">словарь с ключами actor, director</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cinemate.Person.search">
+<em class="property">classmethod </em><tt class="descname">search</tt><big>(</big><em>term</em><big>)</big><a class="headerlink" href="#cinemate.Person.search" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод API
+<a class="reference external" href="http://cinemate.cc/help/api/movie.search/">movie.search</a> возвращает
+первые 10 результатов поиска по базе персон.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>term</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; искомая строка; поддерживает коррекцию ошибок при печати</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">список персон</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#list" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cinemate.Photo">
+<em class="property">class </em><tt class="descclassname">cinemate.</tt><tt class="descname">Photo</tt><big>(</big><em>small</em>, <em>medium</em>, <em>big</em><big>)</big><a class="headerlink" href="#cinemate.Photo" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Фотография персоны. Включает в себя 3 тега со ссылками на фотографии
+разных размеров.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><ul class="first simple">
+<li><strong>small</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; фотография в маленьком разрешении</li>
+<li><strong>medium</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a>) &#8211; фотография в среднем разрешении</li>
+<li><strong>big</strong> &#8211; фотография в большом разрешении</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first last">big: <a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#str" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="cinemate.Photo.from_dict">
+<em class="property">classmethod </em><tt class="descname">from_dict</tt><big>(</big><em>dct</em><big>)</big><a class="headerlink" href="#cinemate.Photo.from_dict" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Фотография персоны из словаря, возвращаемого API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Параметры:</th><td class="field-body"><strong>dct</strong> (<a class="reference external" href="http://docs.python.org/3.3/library/stdtypes.html#dict" title="(в Python v3.3)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; словарь, возвращаемый API</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Результат:</th><td class="field-body">фотография</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Тип результата:</th><td class="field-body"><a class="reference internal" href="#cinemate.Photo" title="cinemate.Photo"><tt class="xref py py-class docutils literal"><span class="pre">Photo</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Предыдущий раздел</h4>
+  <p class="topless"><a href="movie.html"
+                        title="предыдущая глава">Фильмы</a></p>
+  <h4>Следующий раздел</h4>
+  <p class="topless"><a href="account.html"
+                        title="следующая глава">Доступ к пользовательским данным</a></p>
+  <h3>На этой странице</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/person.txt"
+           rel="nofollow">Исходный текст</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Искать" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Введите слова для поиска или имя модуля, класса или функции.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Просмотр</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Содержание модулей Python"
+             >модули</a> |</li>
+        <li class="right" >
+          <a href="account.html" title="Доступ к пользовательским данным"
+             >следующий</a> |</li>
+        <li class="right" >
+          <a href="movie.html" title="Фильмы"
+             >предыдущий</a> |</li>
+        <li><a href="index.html">Документация cinemate 0.0.7</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Ivan Larin.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
