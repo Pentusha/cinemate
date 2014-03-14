@@ -1,10 +1,6 @@
 # coding=utf-8
 """
-    cinemate.cinemate
-    ~~~~~~~~~~~~~~~~~
-
     Модуль реализует класс Cinemate для хранения пользовательских данных.
-
 """
 from requests import get as http_get
 from requests.status_codes import codes
@@ -18,19 +14,20 @@ from .stats import Stats
 class Cinemate(BaseCinemate):
     """ Класс для хранения пользовательских настроек, таких как
         имя пользователя, пароль, passkey, apikey.
+    :param username: имя пользователя
+    :type username: :py:class:`str`
+    :param password: пароль пользователя
+    :type password: :py:class:`str`
+    :param passkey: получается
+        `в настройках <http://cinemate.cc/preferences/#api>`_
+    :type passkey: :py:class:`str`
+    :param apikey: получается `через почту <mailto:a@cinemate.cc>`_
+    :type apikey: :py:class:`str`
     """
     base_api_url = 'http://api.cinemate.cc/'
 
     def __init__(self, username, password, passkey, apikey):
         """ Инициация главного класса, все остальные создаются внутри.
-        :param username: Имя пользователя
-        :type username: str
-        :param password: Пароль пользователя
-        :type password: str
-        :param passkey: Получается здесь http://cinemate.cc/preferences/#api
-        :type passkey: str
-        :param apikey: Получается здесть a@cinemate.cc
-        :type apikey: str
         """
         self.username = username
         self.password = password
@@ -42,15 +39,15 @@ class Cinemate(BaseCinemate):
         self.account = type('Account', (Account,), {'cinemate': self})()
 
     def api_get(self, url, passkey=False, apikey=False, **kwargs):
-        """ Получить страницу api
+        """ Получить страницу API.
         :param url: адрес получаемой страницы, полностью или p/a/th?param=1
-        :type url: str
+        :type url: :py:class:`str`
         :param passkey: использовать для запроса passkey
-        :type passkey: bool
+        :type passkey: :py:class:`bool`
         :param apikey: использовать для запроса apikey
-        :type apikey: bool
+        :type apikey: :py:class:`bool`
         :param kwargs: остальные параметры отправляемые в requests.get
-        :type kwargs dict:
+        :type kwargs: :py:class:`dict`
         :return: ответ на запрос
         :raises RuntimeError: вызывается в если в ответе приходит блок error
             или если запрос возвращает некорректный http-статус

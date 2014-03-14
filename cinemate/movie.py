@@ -1,11 +1,7 @@
 # coding=utf-8
 """
-    cinemate.movie
-    ~~~~~~~~~~~~~~
-
     Модуль реализует класс фильма Movie, а также сопутствующие
-    Country, Genre, Title, Poster, Release, Rating
-
+    Country, Genre, Title, Poster, Release, Rating.
 """
 from datetime import date, datetime
 from six import iteritems
@@ -15,26 +11,25 @@ from .lists import countries, genres
 
 
 class Country(BaseCinemate):
-    """ Страна
-        список стран http://cinemate.cc/movie/country/
+    """ `Страна <http://cinemate.cc/movie/country/>`_ производства фильма.
+
+    :param name: имя страны на русском языке
+    :type name: :py:class:`str`
+    :param slug: slug страны
+    :type slug: :py:class:`str`
     """
     def __init__(self, name, slug=None):
-        """
-        :param name: имя страны на русском языке
-        :type name: str
-        :param slug: slug страны
-        :type slug: str
-        """
         self.name = name
         self.slug = slug or self.__class__.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
-        """ Задать страну фильма из словаря, возвращаемого API
+        """ Задать страну фильма из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return страна
-        :rtype: ``Country``
+        :type dct: :py:class:`dict`
+        :return: страна
+        :rtype: :class:`.Country`
         """
         slug = dct.get('slug')
         name = dct.get('name')
@@ -44,10 +39,11 @@ class Country(BaseCinemate):
 
     @classmethod
     def slug_by_name(cls, name):
-        """ Получениу slug страны по её названию на русском языке
-        :param name: Имя страны на русском языке
+        """ Получение slug страны по её названию на русском языке.
+
+        :param name: имя страны на русском языке
         :return: slug страны
-        :rtype: str
+        :rtype: :py:class:`str`
         """
         finder = (slug for slug, rus in iteritems(countries) if rus == name)
         return next(finder, None)
@@ -57,35 +53,35 @@ class Country(BaseCinemate):
 
 
 class Genre(BaseCinemate):
-    """ Жанр фильма
-        список жанров http://cinemate.cc/movie/genre/
+    """ `Жанр фильма <http://cinemate.cc/movie/genre/>`_.
+
+    :param name: название жанра
+    :type name: :py:class:`str`
+    :param slug: slug жанра
+    :type slug: :py:class:`str`
     """
     def __init__(self, name, slug=None):
-        """
-        :param name: название жанра
-        :type name: str
-        :param slug: slug жанра
-        :type slug: str
-        """
         self.name = name
         self.slug = slug or self.__class__.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
-        """ Задать жанр фильма из словаря, возвращаемого API
+        """ Задать жанр фильма из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return жанр
-        :rtype: ``Genre``
+        :type dct: :py:class:`dict`
+        :return: жанр
+        :rtype: :class:`.Genre`
         """
         return cls(name=dct.get('name'), slug=dct.get('slug'))
 
     @classmethod
     def slug_by_name(cls, name):
-        """ Получениу slug жанра по его названию на русском языке
-        :param name: Имя жанра на русском языке
+        """ Получениу slug жанра по его названию на русском языке.
+
+        :param name: имя жанра на русском языке
         :return: slug страны
-        :rtype: str
+        :rtype: :py:class:`str`
         """
         finder = (slug for slug, rus in iteritems(genres) if rus == name)
         return next(finder, None)
@@ -95,7 +91,14 @@ class Genre(BaseCinemate):
 
 
 class Title(BaseCinemate):
-    """ Заголовки фильма на разных языках
+    """ Заголовки фильма на разных языках.
+
+    :param russian: название фильма на русском языке
+    :type russian: :py:class:`str`
+    :param original: оригинальное название фильма
+    :type original: :py:class:`str`
+    :param english: название фильма на английском языке
+    :type english: :py:class:`str`
     """
     fields = {
         'russian': 'title_russian',
@@ -104,24 +107,17 @@ class Title(BaseCinemate):
     }
 
     def __init__(self, russian='', original='', english=''):
-        """
-        :param russian: название фильма на русском языке
-        :type russian: str
-        :param original: нригинальное название фильма
-        :type original: str
-        :param english: название фильма на английском языке
-        :type english: str
-        """
         self.russian = russian
         self.original = original
         self.english = english
 
     @classmethod
     def from_dict(cls, dct):
-        """ Задать название фильма из словаря, возвращаемого API
+        """ Задать название фильма из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return фильм:
+        :type dct: :py:class:`dict`
+        :return: фильм
         :rtype: ``Movie``
         """
         attrs = {k: dct.get(v) for k, v in iteritems(cls.fields) if v in dct}
@@ -132,19 +128,18 @@ class Title(BaseCinemate):
 
 
 class Poster(BaseCinemate):
-    """ Постер фильма
+    """ Постер фильма в трёх размерах.
+
+    :param small: ссылка на картинку маленького размера
+    :type small: :py:class:`str`
+    :param medium: ссылка на картинку среднего размера
+    :type medium: :py:class:`str`
+    :param big: ссылка на картинку большого размера
+    :type big: :py:class:`str`
     """
     fields = ('small', 'medium', 'big')
 
     def __init__(self, small='', medium='', big=''):
-        """
-        :param small: ссылка на картинку маленького размера
-        :type small: str
-        :param medium: ссылка на картинку среднего размера
-        :type medium: str
-        :param big: ссылка на картинку большого размера
-        :type big: str
-        """
         self.small = small
         self.medium = medium
         self.big = big
@@ -152,10 +147,11 @@ class Poster(BaseCinemate):
     @classmethod
     def from_dict(cls, dct):
         """ Постер фильма из словаря, возвращаемого API
+
         :param dct: словарь, возвращаемый API
         :type dct: dict
-        :return: Дата релиза
-        :rtype: Release
+        :return: дата релиза
+        :rtype: :class:`.Poster`
         """
         return cls(**{k: dct[k].get('url') for k in cls.fields if k in dct})
 
@@ -165,22 +161,19 @@ class Poster(BaseCinemate):
 
 
 class Release(BaseCinemate):
-    """ Даты релиза фильма
+    """ Даты релиза фильма.
+
+    :param world: дата выхода фильма в прокат
+    :type world: :py:class:`str`
+    :param russia: дата выхода фильма в российский прокат
+    :type russia: :py:class:`str`
     """
     fields = {
         'world': 'release_date_world',
         'russia': 'release_date_russia',
     }
-    repr_fields = ('world', )
-    id_field = 'world'
 
     def __init__(self, world=None, russia=None):
-        """
-        :param world: дата релиза в Мире
-        :type: str
-        :param russia: дата релиза в России
-        :type: str
-        """
         self.world = parse_date(world)
         self.russia = parse_date(russia)
 
@@ -190,18 +183,14 @@ class Release(BaseCinemate):
 
 
 class Rating(BaseCinemate):
-    """ Рейтинг фильма imdb и kinopoisk
-    """
-    repr_fields = ('rating', 'votes',)
-    id_field = 'rating'
+    """ Рейтинг фильма imdb и kinopoisk.
 
+    :param votes: количесвто отданных голосов
+    :type votes: :py:class:`int`
+    :param rating: рейтинг фильма
+    :type rating: :py:class:`float`
+    """
     def __init__(self, votes=0, rating=0):
-        """
-        :param votes:
-        :type votes:
-        :param rating:
-        :type rating:
-        """
         self.votes = int(votes)
         self.rating = float(rating)
 
@@ -213,7 +202,40 @@ class Rating(BaseCinemate):
 
 
 class Movie(BaseCinemate):
-    """ Класс фильма
+    """ Класс реализуюзий фильмы, сериалы, короткометражки.
+
+    :param movie_id: идентификатор фильма на cinemate.cc
+    :type movie_id: :py:class:`int`
+    :param title: название
+    :type title: :class:`.Title`
+    :param year: год выхода
+    :type year: :py:class:`int`
+    :param type: тип ``movie``, ``serial``, ``short``
+    :type type: :py:class:`int`
+    :param description: описание
+    :type description: :py:class:`str`
+    :param imdb: рейтинг IMDb
+    :type imdb: :class:`.Rating`
+    :param kinopoisk: рейтинг kinopoisk
+    :type kinopoisk: :class:`.Rating`
+    :param poster: постер фильма
+    :type poster: :class:`.Poster`
+    :param release: даты релиза
+    :type release: :class:`.Release`
+    :param runtime: продолжительность в минутах
+    :type runtime: :py:class:`int`
+    :param trailer: ссылка на трейлер
+    :type trailer: :py:class:`str`
+    :param url: ссылка на cinemate.cc
+    :type url: :py:class:`str`
+    :param genre: список жанров
+    :type genre: :class:`.Genre`
+    :param country: список стран
+    :type country: :class:`.Country`
+    :param cast: список актёров
+    :type cast: :py:class:`list`
+    :param director: список режиссеров
+    :type director: :py:class:`list`
     """
 
     fields = (
@@ -223,11 +245,10 @@ class Movie(BaseCinemate):
     )
 
     def __init__(self, movie_id, **kwargs):
+        """ При инициализации принимает все именованные аргументы и делает их
+        аттрибутами экземпляра класса.
         """
-        :param movie_id: Идентификатор фильма на cinemate.cc
-        :type movie_id: int
-        """
-        self.id = movie_id
+        self.id = int(movie_id)
         self.title = Title()
         for field in self.__class__.fields:
             value = kwargs.get(field)
@@ -236,11 +257,12 @@ class Movie(BaseCinemate):
 
     @classmethod
     def from_dict(cls, dct):
-        """ Получить информацию о фильме из словаря, возвращаемого API
+        """ Получить информацию о фильме из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return: Фильм
-        :rtype: Movie
+        :type dct: :py:class:`dict`
+        :return: фильм
+        :rtype: :class:`.Movie`
         """
         movie_id = int(dct['url'].split('/')[-2])
         cinemate = getattr(cls, 'cinemate')
@@ -283,19 +305,21 @@ class Movie(BaseCinemate):
     @require('apikey')
     def get(cls, movie_id):
         """ Короткий аналог movie(123).fetch()
-        :param movie_id: Идентификатор требуемого фильма
-        :type movie_id: int
-        :return: Фильм
-        :rtype: Movie
+
+        :param movie_id: идентификатор требуемого фильма
+        :type movie_id: :py:class:`int`
+        :return: фильм
+        :rtype: :class:`.Movie`
         """
         return cls(movie_id).fetch()
 
     @require('apikey')
     def fetch(self):
-        """ Получить полную информацию о фильме
-            http://cinemate.cc/help/api/movie/
+        """ Метод API `movie <http://cinemate.cc/help/api/movie/>`_
+        получает полную информацию о фильме.
+
         :return: фильм
-        :rtype: Movie
+        :rtype: :class:`.Movie`
         """
         url = 'movie'
         cinemate = getattr(self, 'cinemate')
@@ -307,14 +331,16 @@ class Movie(BaseCinemate):
     @classmethod
     @require('apikey')
     def search(cls, term):
-        """ Поиск по заголовкам фильмов.
-            Поддерживается уточняющий поиск по году выхода фильма и
-            коррекцию ошибок при печати
-            http://cinemate.cc/help/api/movie.search/
+        """ Метод API
+        `movie.search <http://cinemate.cc/help/api/movie.search/>`_
+        производит поиск по заголовкам фильмов.
+        Поддерживается уточняющий поиск по году выхода фильма и
+        коррекцию ошибок при печати.
+
         :param term: искомая строка
-        :type term: str
+        :type term: :py:class:`str`
         :return: список фильов
-        :rtype: list
+        :rtype: :py:class:`list`
         """
         url = 'movie.search'
         cinemate = getattr(cls, 'cinemate')
@@ -327,36 +353,40 @@ class Movie(BaseCinemate):
     @classmethod
     @require('apikey')
     def list(cls, **kwargs):
-        """ Результаты поиска фильмов, используя заданные фильтры.
-            Возвращается 10 первых фильмов
-            http://cinemate.cc/help/api/movie.list/
+        """ Метод API `movie.list <http://cinemate.cc/help/api/movie.list/>`_
+        возращает результаты поиска фильмов, используя заданные фильтры.
+        По-умолчанию возвращается 10 первых фильмов.
+
         :param kwargs: именованные фильтры
-        :type kwargs: dict
-        :param type: тип фильмов. Возможные значения: movie, serial, short
-        :type type: str
+        :type kwargs: :py:class:`dict`
+        :param type: тип фильмов. Возможные значения:
+            ``movie``, ``serial``, ``short``
+        :type type: :py:class:`str`
         :param year: год выпуска фильма или сериала
-        :type year: int
+        :type year: :py:class:`int`
         :param genre: slug жанра http://cinemate.cc/movie/genre/
-        :type genre: str or ``cinemate.Genre``
+        :type genre: :py:class:`str` or :class:`cinemate.Genre`
         :param country: slug страны http://cinemate.cc/movie/country/
-        :type country: str or ``cinemate.Country``
+        :type country: :py:class:`str` or :class:`cinemate.Country`
         :param order_by: критерий сортировки:
-                         create_date, release_date, ru_release_date
-        :type order_by: str
-        :param order: порядок сортировки параметра order_by: desc, asc
-        :type order: str
+            ``create_date``, ``release_date``, ``ru_release_date``
+        :type order_by: :py:class:`str`
+        :param order: порядок сортировки параметра ``order_by``:
+            ``desc``, ``asc``
+        :type order: :py:class:`str`
         :param order_from: начальная дата среза параметра ``order_by``
-            в формате ДД.ММ.ГГГГ
-        :type order_from: datetime.date or str
+            в формате ``ДД.ММ.ГГГГ``
+        :type order_from: :py:class:`datetime.date` or :py:class:`str`
         :param order_to: конечная дата среза параметра ``order_by``
-            в формате ДД.ММ.ГГГГ
-        :type order_to: datetime.date or str
+            в формате ``ДД.ММ.ГГГГ``
+        :type order_to: :py:class:`datetime.date` or :py:class:`str`
         :param page: страница в выборке (по умолчанию 0)
-        :type page: int
-        :param per_page: записей в выборке (по умолчанию 10, максимум 25)
-        :type per_page: int
-        :return: Список фильмов
-        :rtype: list
+        :type page: :py:class:`int`
+        :param per_page: количество записей в выборке
+            (по умолчанию 10, максимум 25)
+        :type per_page: :py:class:`int`
+        :return: cписок фильмов
+        :rtype: :py:class:`list`
         :raises ValueError: вызывается если указан один из параметров
             ``order_to``/``order_from``, но не указан ``order_by``
         """
@@ -390,7 +420,7 @@ class Movie(BaseCinemate):
         cinemate = getattr(cls, 'cinemate')
         params = {k: v for k, v in iteritems(params) if v is not None}
         req = cinemate.api_get(url, apikey=True, params=params)
-        movies = req.json().get('movie')
+        movies = req.json().get('movie', {})
         return list(map(cls.from_dict, movies))
 
     def __unicode__(self):

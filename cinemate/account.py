@@ -1,24 +1,22 @@
 # coding=utf-8
 """
-    cinemate.account
-    ~~~~~~~~~~~~~~~~
-
     Модуль реализует класс Account для получения пользовательской информации.
-
 """
 from .utils import BaseCinemate, require, parse_datetime
 from .movie import Title
 
 
 class Account(BaseCinemate):
-    """ Класс для получения пользовательских данных
+    """ Класс для получения пользовательских данных.
     """
     @require('username', 'password')
     def auth(self):
-        """ Получить passkey
-            http://cinemate.cc/help/api/account.auth/
-        :return: Passkey
-        :rtype: str
+        """ Метод API
+        `account.auth <http://cinemate.cc/help/api/account.auth/>`_ возвращает
+        passkey.
+
+        :return: passkey
+        :rtype: :py:class:`str`
         """
         cinemate = getattr(self, 'cinemate')
         params = {
@@ -31,10 +29,12 @@ class Account(BaseCinemate):
 
     @require('passkey')
     def profile(self):
-        """ Получить поля профиля
-            http://cinemate.cc/help/api/account.profile/
-        :return: Словарь с полями профиля
-        :rtype: dict
+        """ Метод API
+        `account.profile <http://cinemate.cc/help/api/account.profile/>`_
+        получить поля профиля.
+
+        :return: словарь с полями профиля
+        :rtype: :py:class:`dict`
         """
         url = 'account.profile'
         cinemate = getattr(self, 'cinemate')
@@ -43,10 +43,12 @@ class Account(BaseCinemate):
 
     @require('passkey')
     def updatelist(self):
-        """ Записи ленты обновлений пользователя
-            http://cinemate.cc/help/api/account.updatelist/
-        :return: Список персон, и фильмов за которыми следит пользователь
-        :rtype: list
+        """ Метод API
+        `account.updatelist <http://cinemate.cc/help/api/account.updatelist/>`_
+        возвращает записи ленты обновлений пользователя.
+
+        :return: список персон и фильмов за которыми следит пользователь
+        :rtype: :py:class:`list`
         """
         url = 'account.updatelist'
         cinemate = getattr(self, 'cinemate')
@@ -71,10 +73,12 @@ class Account(BaseCinemate):
 
     @require('passkey')
     def watchlist(self):
-        """ Метод возвращает список объектов слежения пользователя
-            http://cinemate.cc/help/api/account.watchlist/
+        """ Метод API
+        `account.watchlist <http://cinemate.cc/help/api/account.watchlist/>`_
+        возвращает список объектов слежения пользователя.
+
         :return: словарь объектов слежения с ключами movie, person
-        :rtype: dict
+        :rtype: :py:class:`dict`
         """
         url = 'account.watchlist'
         cinemate = getattr(self, 'cinemate')

@@ -1,18 +1,22 @@
 # coding=utf-8
 """
-    cinemate.person
-    ~~~~~~~~~~~~~~~
-
     Модуль реализует класс персоны Person,
     а также класс фотографии персоны Photo
-
 """
 from six import iteritems
 from .utils import require, BaseCinemate
 
 
 class Photo(BaseCinemate):
-    """ Фото персоны
+    """ Фотография персоны. Включает в себя 3 тега со ссылками на фотографии
+    разных размеров.
+
+    :param small: фотография в маленьком разрешении
+    :type small: :py:class:`str`
+    :param medium: фотография в среднем разрешении
+    :type medium: :py:class:`str`
+    :param big: фотография в большом разрешении
+    :type: big: :py:class:`str`
     """
     fields = ('small', 'medium', 'big')
 
@@ -23,11 +27,12 @@ class Photo(BaseCinemate):
 
     @classmethod
     def from_dict(cls, dct):
-        """ Фотография персоны из словаря, возвращаемого API
+        """ Фотография персоны из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return: Фотография
-        :rtype: Photo
+        :type dct: :py:class:`dict`
+        :return: фотография
+        :rtype: :class:`.Photo`
         """
         if dct is None:
             return
@@ -40,14 +45,21 @@ class Photo(BaseCinemate):
 
 
 class Person(BaseCinemate):
-    """ Класс персоны
+    """ Класс персоны.
+
+    :param person_id: идентификатор персоны на cinemate.cc
+    :type person_id: :py:class:`int`
+    :param name: русскоязычное имя персоны
+    :type name: :py:class:`str`
+    :param name_original: имя персоны в оригинале
+    :type name_original: :py:class:`str`
+    :param photo: фотграфия персоны
+    :type photo: :class:`.Photo`
+    :param url: ссылка на страницу персоны
+    :type url: :py:class:`str`
     """
     def __init__(self, person_id, **kwargs):
-        """
-        :param person_id: Идентификатор персоны на cinemate.cc
-        :type person_id: int
-        """
-        self.id = person_id
+        self.id = int(person_id)
         self.name = kwargs.get('name')
         self.name_original = kwargs.get('name_original')
         self.photo = kwargs.get('photo')
@@ -55,11 +67,12 @@ class Person(BaseCinemate):
 
     @classmethod
     def from_dict(cls, dct):
-        """ Информация о персоне из словаря, возвращаемого API
+        """ Информация о персоне из словаря, возвращаемого API.
+
         :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return: Персона
-        :rtype: Person
+        :type dct: :py:class:`dict`
+        :return: персона
+        :rtype: :class:`.Person`
         """
         return cls(
             person_id=dct.get('id') or dct.get('attrib').get('id'),
@@ -71,10 +84,11 @@ class Person(BaseCinemate):
 
     @require('apikey')
     def fetch(self):
-        """ Получение полной информации о персоне
-            http://cinemate.cc/help/api/person/
+        """ Метод API `person <http://cinemate.cc/help/api/person/>`_
+        получает полную информацию о персоне
+
         :return: персона
-        :rtype: Person
+        :rtype: :class:`.Person`
         """
         url = 'person'
         cinemate = getattr(self, 'cinemate')
@@ -87,20 +101,23 @@ class Person(BaseCinemate):
     @require('apikey')
     def get(cls, person_id):
         """ Короткий аналог person(123).fetch()
+
         :param person_id: идентификатор персоны
-        :type person_id: int
+        :type person_id: :py:class:`int`
         :return: персона
-        :rtype: Person
+        :rtype: :class:`.Person`
         """
         return cls(person_id).fetch()
 
     @require('apikey')
     def movies(self):
-        """ Фильмы, в съемке которых персона принимала участие в качестве
-            актера или режиссера
-            http://cinemate.cc/help/api/person.movies/
-            :return: словарь с ключачи actor, director
-            :rtype: dict
+        """ Метод API
+        `person.movies <http://cinemate.cc/help/api/person.movies/>`_
+        возвращает фильмы, в съемке которых персона принимала участие
+        в качестве актера или режиссера.
+
+        :return: словарь с ключами actor, director
+        :rtype: :py:class:`dict`
         """
         url = 'person.movies'
         cinemate = getattr(self, 'cinemate')
@@ -117,12 +134,14 @@ class Person(BaseCinemate):
     @classmethod
     @require('apikey')
     def search(cls, term):
-        """ Метод возвращает первые 10 результатов поиска по базе персон
-            http://cinemate.cc/help/api/movie.search/
+        """ Метод API
+        `movie.search <http://cinemate.cc/help/api/movie.search/>`_ возвращает
+        первые 10 результатов поиска по базе персон.
+
         :param term: искомая строка; поддерживает коррекцию ошибок при печати
-        :type term: str
+        :type term: :py:class:`str`
         :return: список персон
-        :rtype: list
+        :rtype: :py:class:`list`
         """
         url = 'person.search'
         cinemate = getattr(cls, 'cinemate')
@@ -135,4 +154,3 @@ class Person(BaseCinemate):
         fields = str(self.id), self.name_original or self.name
         fields = ' '.join(fields)
         return '<Person {fields}>'.format(fields=fields)
-

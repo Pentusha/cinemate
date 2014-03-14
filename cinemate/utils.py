@@ -1,23 +1,22 @@
 # coding=utf-8
 """
-    cinemate.utils
-    ~~~~~~~~~~~~~~
-
-    Модуль реализует
-    метакласс CommonMeta для реализации служебных методов;
-    класс BaseCinemate от которого наследуются все остальные классы проекта;
-    декоратор require, который проверяет у экземпляра класса наличие
-        указаных аттрибутов;
-    функции parse_date, parse_datetime для разбора дат и времени в формате ISO.
+    Модуль содержит:
+    метакласс :class:`.CommonMeta` для реализации служебных методов;
+    - класс :class:`.BaseCinemate` от которого наследуются все остальные
+      классы проекта;
+    - декоратор :func:`require`, который проверяет у экземпляра класса наличие
+      указаных аттрибутов;
+    - функции :func:`parse_date`, :func:`parse_datetime` для разбора дат и
+      времени в формате ISO.
 
 """
 from datetime import datetime
 from functools import wraps
-from six import add_metaclass, PY2, callable
+from six import add_metaclass, PY2
 
 
 class CommonMeta(type):
-    """ Метакласс для реализации служебных методов
+    """ Метакласс для реализации __служебных_методов__.
     """
     def __new__(mcs, name, bases, attrs):
         method = attrs.get('__unicode__')
@@ -30,18 +29,18 @@ class CommonMeta(type):
 
 @add_metaclass(CommonMeta)
 class BaseCinemate(object):
-    """ Заглушка для будущего добавления __служебных_методов__
-        Для этого же в классах перечислены repr_fields, id_field, full_repr
+    """ От этого класса наследуются все остальные классы проекта.
     """
 
 
 # noinspection PyPep8Naming
 class require(object):
-    """ Декоратор проверяет наличие указанных атрибутов у объекта cinemate
+    """ Декоратор проверяет наличие указанных атрибутов у объекта cinemate.
     """
     def __init__(self, *attr_names):
         """
         :param attr_names: имена требуемых аттрибутов
+        :type attr_names: :py:class:`str` or :py:class:`tuple`
         """
         self.attr_names = attr_names
 
@@ -50,9 +49,9 @@ class require(object):
         def wrapper(*args, **kwargs):
             """ Декорируемая функция
             :param args: неименованные параметры декорируемой функции
-            :type args: tuple
+            :type args: :py:class:`tuple`
             :param kwargs: именованные параметры декорируемой функции
-            :type kwargs: dict
+            :type kwargs: :py:class:`dict`
             """
             cinemate = __get_cinemate__(args[0])  # args[0] == self or cls
             if not all(getattr(cinemate, a, None) for a in self.attr_names):
@@ -67,7 +66,8 @@ class require(object):
 
 
 def __get_cinemate__(instance):
-    """
+    """ Получение объекта cinemate хранящегося в аттрибутах.
+
     :param instance: экземпляр какого-нибудь класса
     :return: объект cinemate
     :raises AttributeError: Вызывается, если объект не содержит
@@ -83,8 +83,9 @@ def __get_cinemate__(instance):
 
 def parse_datetime(source):
     """ Парсинг дат и времени формата ISO. Например: 2011-04-09T15:38:30
+
     :param source: исходная строка с датой и временем
-    :type source: str
+    :type source: :py:class:`str`
     """
     if not source:
         return
@@ -93,10 +94,10 @@ def parse_datetime(source):
 
 def parse_date(source):
     """ Парсинг дат формата 2011-04-07
+
     :param source: исходная строка с датой
-    :type source: str
+    :type source: :py:class:`str`
     """
     if not source:
         return
     return datetime.strptime(source, '%Y-%m-%d')
-

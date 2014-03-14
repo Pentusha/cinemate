@@ -13,7 +13,9 @@ Cinemate - реализация API сайта [сinemate.cc][cinemate] на я�
 
     pip install cinemate
 
-Страница на [pypi][pypi].
+Страница на [PyPI][pypi].
+
+Документация на [Read the Docs][readthedocs].
 
 Использование
 =============
@@ -76,4 +78,5 @@ Gaspar Noe
 [pep20]: http://www.python.org/dev/peps/pep-0020/
 [pep287]: http://www.python.org/dev/peps/pep-0287/
 [pypi]: https://pypi.python.org/pypi/cinemate
+[readthedocs]: http://cinemate.readthedocs.org/
 [api]: http://cinemate.cc/help/api/

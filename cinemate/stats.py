@@ -1,22 +1,19 @@
 # coding=utf-8
 """
-    cinemate.stats
-    ~~~~~~~~~~~~~~
-
     Модуль реализует класс Stats для получения статистики сайта.
-
 """
 from .utils import BaseCinemate
 
 
 class Stats(BaseCinemate):
-    """ Статистика сайта
+    """ Статистика сайта.
     """
     def new(self):
-        """ Метод возвращает статистику сайта за последние сутки
-            http://cinemate.cc/help/api/stats.new/
+        """ Метод API `stats.new <http://cinemate.cc/help/api/stats.new/>`_
+        возвращает статистику сайта за последние сутки.
+
         :return: словарь содежащий статистику за последние сутки
-        :rtype: dict
+        :rtype: :py:class:`dict`
         """
         url = 'stats.new'
         cinemate = getattr(self, 'cinemate')
