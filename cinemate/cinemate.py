@@ -55,7 +55,7 @@ class Cinemate(BaseCinemate):
         full_url = url.startswith('http://')
         url = full_url and url or self.base_api_url + url.lstrip('/')
         params = kwargs.pop('params', {})
-        params['format'] = 'json'
+        params['format'] = kwargs.pop('format', 'json')
         if passkey:
             params['passkey'] = self.passkey
         if apikey:

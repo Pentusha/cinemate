@@ -3,9 +3,10 @@
 Реализация API сайта cinemate.cc на языке python.
 """
 import os
+import sys
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
-import sys
+from pip.req import parse_requirements
 
 
 class Tox(TestCommand):
@@ -21,12 +22,20 @@ class Tox(TestCommand):
         sys.exit(errno)
 
 
+basedir = os.path.dirname(__file__)
+
+
 def get_version():
-    basedir = os.path.dirname(__file__)
     with open(os.path.join(basedir, 'cinemate/version.py')) as f:
         variables = {}
         exec(f.read(), variables)
         return variables['VERSION']
+
+
+def get_requirements(filename):
+    requirements_path = os.path.join(basedir, filename)
+    requirements = parse_requirements(requirements_path)
+    return [str(r.req) for r in requirements]
 
 
 setup(
@@ -38,19 +47,10 @@ setup(
     author_email='pentusha@gmail.com',
     description='cinemate.cc api',
     long_description=__doc__,
-    requires=('requests', 'six'),
     packages=find_packages(),
-    install_requires=('requests', 'six'),
-    tests_require=(
-        'requests',
-        'six',
-        'tox',
-        'pytest',
-        'pytest-cov',
-        'HTTPretty',
-        'coveralls',
-    ),
-    cmdclass = {'test': Tox},
+    install_requires=get_requirements('requirements.txt'),
+    tests_require=get_requirements('requirements_tests.txt'),
+    cmdclass={'test': Tox},
     include_package_data=True,
     zip_safe=False,
     platforms='any',

@@ -20,7 +20,7 @@ class Country(BaseCinemate):
     """
     def __init__(self, name, slug=None):
         self.name = name
-        self.slug = slug or self.__class__.slug_by_name(name)
+        self.slug = slug or self.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
@@ -31,10 +31,8 @@ class Country(BaseCinemate):
         :return: страна
         :rtype: :class:`.Country`
         """
-        slug = dct.get('slug')
         name = dct.get('name')
-        if not slug:
-            slug = cls.slug_by_name(name)
+        slug = dct.get('slug', cls.slug_by_name(name))
         return cls(name=name, slug=slug)
 
     @classmethod
@@ -62,7 +60,7 @@ class Genre(BaseCinemate):
     """
     def __init__(self, name, slug=None):
         self.name = name
-        self.slug = slug or self.__class__.slug_by_name(name)
+        self.slug = slug or self.slug_by_name(name)
 
     @classmethod
     def from_dict(cls, dct):
@@ -168,11 +166,6 @@ class Release(BaseCinemate):
     :param russia: дата выхода фильма в российский прокат
     :type russia: :py:class:`str`
     """
-    fields = {
-        'world': 'release_date_world',
-        'russia': 'release_date_russia',
-    }
-
     def __init__(self, world=None, russia=None):
         self.world = parse_date(world)
         self.russia = parse_date(russia)
@@ -250,7 +243,7 @@ class Movie(BaseCinemate):
         """
         self.id = int(movie_id)
         self.title = Title()
-        for field in self.__class__.fields:
+        for field in self.fields:
             value = kwargs.get(field)
             if value:
                 setattr(self, field, value)
@@ -364,9 +357,9 @@ class Movie(BaseCinemate):
         :type type: :py:class:`str`
         :param year: год выпуска фильма или сериала
         :type year: :py:class:`int`
-        :param genre: slug жанра http://cinemate.cc/movie/genre/
+        :param genre: `slug жанра <http://cinemate.cc/movie/genre/>`_
         :type genre: :py:class:`str` or :class:`cinemate.Genre`
-        :param country: slug страны http://cinemate.cc/movie/country/
+        :param country: `slug страны <http://cinemate.cc/movie/country/>`_
         :type country: :py:class:`str` or :class:`cinemate.Country`
         :param order_by: критерий сортировки:
             ``create_date``, ``release_date``, ``ru_release_date``

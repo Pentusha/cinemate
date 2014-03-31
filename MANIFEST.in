@@ -1,1 +1,3 @@
 recursive-exclude tests *
+include requirements.txt
+include requirements_tests.txt
