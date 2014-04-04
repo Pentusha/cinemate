@@ -10,6 +10,6 @@ install: "pip install -r requirements_tests.txt"
 script:
   - py.test
   - py.test --cov cinemate tests/ --cov-report annotate
-  - py.test --pep8 cinemate tests
+  - py.test --pep8 cinemate
 after_success:
   - coveralls
