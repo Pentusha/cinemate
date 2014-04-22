@@ -1,5 +1,6 @@
 # coding=utf-8
-from httpretty import activate, register_uri, GET
+from httpretty import activate
+
 from tests.test_cinemate import CinemateTestCase
 from tests.mock import reqresp as rr
 
@@ -7,9 +8,7 @@ from tests.mock import reqresp as rr
 class StatsTestCase(CinemateTestCase):
     @activate
     def test_new(self):
-        register_uri(GET,
-                     rr['stats.new']['req'],
-                     body=rr['stats.new']['resp'])
+        self.register_uri(**rr['stats.new'])
         stats = self.cin.stats.new()
         self.assertIsInstance(stats, dict)
         self.assertIn('users_count', stats)

@@ -1,5 +1,6 @@
 # coding=utf-8
 from datetime import datetime
+
 from cinemate import utils
 from tests.test_cinemate import CinemateTestCase
 

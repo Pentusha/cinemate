@@ -4,6 +4,7 @@
 """
 import os
 import sys
+import codecs
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from pip.req import parse_requirements
@@ -46,7 +47,7 @@ setup(
     author='Ivan Larin',
     author_email='pentusha@gmail.com',
     description='cinemate.cc api',
-    long_description=__doc__,
+    long_description=codecs.open('README.rst', encoding="utf-8").read(),
     packages=find_packages(),
     install_requires=get_requirements('requirements.txt'),
     tests_require=get_requirements('requirements_tests.txt'),

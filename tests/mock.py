@@ -1,10 +1,9 @@
 # coding=utf-8
-""" Модуль содержит запросы и сохранённые ответы сервера для тестирования.
-    Чтобы проверить валидность json можно просто запустить модуль.
 """
-from six import u
+    Модуль содержит запросы и сохранённые ответы сервера для тестирования.
+"""
 from requests.status_codes import codes
-import json
+from six import u
 
 
 account_auth = u('{"passkey": "of3k4oasd9498dfvjh5hthhgfgdfy"}')
@@ -26,72 +25,64 @@ response404 = u('response irrelevant 404')
 
 reqresp = {
     'account.auth': {
-        'req': 'http://api.cinemate.cc/account.auth?username=USERNAME&password=PASSWORD&format=json',
-        'resp': account_auth,
+        'uri': 'http://api.cinemate.cc/account.auth?username=USERNAME&password=PASSWORD&format=json',
+        'body': account_auth,
     },
     'account.profile': {
-        'req': 'http://api.cinemate.cc/account.profile?passkey=PASSKEY&format=json',
-        'resp': account_profile,
+        'uri': 'http://api.cinemate.cc/account.profile?passkey=PASSKEY&format=json',
+        'body': account_profile,
     },
     'account.updatelist': {
-        'req': 'http://api.cinemate.cc/account.updatelist?passkey=PASSKEY&newonly=1&format=json',
-        'resp': account_updatelist,
+        'uri': 'http://api.cinemate.cc/account.updatelist?passkey=PASSKEY&newonly=1&format=json',
+        'body': account_updatelist,
     },
     'account.watchlist': {
-        'req': 'http://api.cinemate.cc/account.watchlist?passkey=PASSKEY&format=json',
-        'resp': account_watchlist,
+        'uri': 'http://api.cinemate.cc/account.watchlist?passkey=PASSKEY&format=json',
+        'body': account_watchlist,
     },
     'movie': {
-        'req': 'http://api.cinemate.cc/movie?apikey=APIKEY&id=68675&format=json',
-        'resp': movie,
+        'uri': 'http://api.cinemate.cc/movie?apikey=APIKEY&id=68675&format=json',
+        'body': movie,
     },
     'movie_one_person': {
-        'req': 'http://api.cinemate.cc/movie?apikey=APIKEY&id=147668&format=json',
-        'resp': movie_one_person,
+        'uri': 'http://api.cinemate.cc/movie?apikey=APIKEY&id=147668&format=json',
+        'body': movie_one_person,
     },
     'movie.list': {
-        'req': 'http://api.cinemate.cc/movie.list?apikey=APIKEY&year=2010&format=json',
-        'resp': movie_list,
+        'uri': 'http://api.cinemate.cc/movie.list?apikey=APIKEY&year=2010&format=json',
+        'body': movie_list,
     },
     'movie.list_with_params': {
-        'req': 'http://api.cinemate.cc/movie.list?apikey=APIKEY&to=04.07.1989&from=04.07.1988&order_by=release_date&format=json',
-        'resp': movie_list_with_params,
+        'uri': 'http://api.cinemate.cc/movie.list?apikey=APIKEY&to=04.07.1989&from=04.07.1988&order_by=release_date&format=json',
+        'body': movie_list_with_params,
     },
     'movie.search': {
-        'req': u('http://api.cinemate.cc/movie.search?apikey=APIKEY&term=Пираты%20кариб&format=json'),
-        'resp': movie_search,
+        'uri': u('http://api.cinemate.cc/movie.search?apikey=APIKEY&term=Пираты%20кариб&format=json'),
+        'body': movie_search,
     },
     'person': {
-        'req': 'http://api.cinemate.cc/person?id=3971&apikey=APIKEY&format=json',
-        'resp': person,
+        'uri': 'http://api.cinemate.cc/person?id=3971&apikey=APIKEY&format=json',
+        'body': person,
     },
     'person.movies': {
-        'req': 'http://api.cinemate.cc/person.movies?id=43083&apikey=APIKEY&format=json',
-        'resp': person_movies,
+        'uri': 'http://api.cinemate.cc/person.movies?id=43083&apikey=APIKEY&format=json',
+        'body': person_movies,
     },
     'person.search': {
-        'req': u('http://api.cinemate.cc/person.search?apikey=APIKEY&term=гиленхол&format=json'),
-        'resp': person_search,
+        'uri': u('http://api.cinemate.cc/person.search?apikey=APIKEY&term=гиленхол&format=json'),
+        'body': person_search,
     },
     'stats.new': {
-        'req': 'http://api.cinemate.cc/stats.new?format=json',
-        'resp': stats_new,
+        'uri': 'http://api.cinemate.cc/stats.new?format=json',
+        'body': stats_new,
     },
     'stats.wtf': {  # raise RuntimeError('Unknown error')
-        'req': 'http://api.cinemate.cc/stats.wtf?format=json',
-        'resp': stats_wtf,
+        'uri': 'http://api.cinemate.cc/stats.wtf?format=json',
+        'body': stats_wtf,
     },
     'account.wrong_status_code': {  # raise RuntimeError()
-        'req': 'http://api.cinemate.cc/account.auth?username=USERNAME&password=PASSWORD&format=pewpewpew',
-        'resp': response404,
+        'uri': 'http://api.cinemate.cc/account.auth?username=USERNAME&password=PASSWORD&format=pewpewpew',
+        'body': response404,
         'status': codes.not_found,
     },
 }
-
-
-if __name__ == '__main__':
-    for k, v in reqresp.items():
-        try:
-            json.loads(v['resp'])
-        except ValueError as exc:
-            print(k, exc)

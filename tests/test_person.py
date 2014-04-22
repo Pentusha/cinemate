@@ -1,17 +1,16 @@
 # coding=utf-8
-from httpretty import activate, register_uri, GET
-from tests.test_cinemate import CinemateTestCase
-from tests.mock import reqresp as rr
+from httpretty import activate
 from six import u
+
 from cinemate.person import Photo
+from tests.mock import reqresp as rr
+from tests.test_cinemate import CinemateTestCase
 
 
 class PersonTestCase(CinemateTestCase):
     @activate
     def test_person(self):
-        register_uri(GET,
-                     rr['person']['req'],
-                     body=rr['person']['resp'])
+        self.register_uri(**rr['person'])
         person = self.cin.person.get(3971)
         self.assertIsInstance(person, self.cin.person)
         self.assertEqual(person.name, u('Джейк Джилленхол'))
@@ -31,9 +30,7 @@ class PersonTestCase(CinemateTestCase):
 
     @activate
     def test_person_movies(self):
-        register_uri(GET,
-                     rr['person.movies']['req'],
-                     body=rr['person.movies']['resp'])
+        self.register_uri(**rr['person.movies'])
         movies = self.cin.person(43083).movies()
         self.assertIsInstance(movies, dict)
 
@@ -59,9 +56,7 @@ class PersonTestCase(CinemateTestCase):
 
     @activate
     def test_person_search(self):
-        register_uri(GET,
-                     rr['person.search']['req'],
-                     body=rr['person.search']['resp'])
+        self.register_uri(**rr['person.search'])
         lst = self.cin.person.search(u('гиленхол'))
         self.assertIsInstance(lst, list)
         self.assertEqual(len(lst), 7)

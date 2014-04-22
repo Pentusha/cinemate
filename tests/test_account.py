@@ -1,25 +1,23 @@
 # coding=utf-8
 from datetime import datetime
-from httpretty import activate, register_uri, GET
-from tests.test_cinemate import CinemateTestCase
-from tests.mock import reqresp as rr
+
+from httpretty import activate
 from six import u
+
+from tests.mock import reqresp as rr
+from tests.test_cinemate import CinemateTestCase
 
 
 class AccountTestCase(CinemateTestCase):
     @activate
     def test_auth(self):
-        register_uri(GET,
-                     rr['account.auth']['req'],
-                     body=rr['account.auth']['resp'])
+        self.register_uri(**rr['account.auth'])
         self.cin.account.auth()
         self.assertEqual(self.cin.passkey, 'of3k4oasd9498dfvjh5hthhgfgdfy')
 
     @activate
     def test_profile(self):
-        register_uri(GET,
-                     rr['account.profile']['req'],
-                     body=rr['account.profile']['resp'])
+        self.register_uri(**rr['account.profile'])
         profile = self.cin.account.profile()
         self.assertIsInstance(profile, dict)
         self.assertEqual(profile['username'], 'UserName')
@@ -35,9 +33,7 @@ class AccountTestCase(CinemateTestCase):
 
     @activate
     def test_updatelist(self):
-        register_uri(GET,
-                     rr['account.updatelist']['req'],
-                     body=rr['account.updatelist']['resp'])
+        self.register_uri(**rr['account.updatelist'])
         lst = self.cin.account.updatelist()
         first = lst[0]
         self.assertIsInstance(lst, list)
@@ -51,9 +47,7 @@ class AccountTestCase(CinemateTestCase):
 
     @activate
     def test_watchlist(self):
-        register_uri(GET,
-             rr['account.watchlist']['req'],
-             body=rr['account.watchlist']['resp'])
+        self.register_uri(**rr['account.watchlist'])
         wlst = self.cin.account.watchlist()
         self.assertIsInstance(wlst, dict)
         self.assertIn('movie', wlst)
