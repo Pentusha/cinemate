@@ -4,6 +4,7 @@
 """
 from six import u
 
+
 # `список стран <http://cinemate.cc/movie/country/>`_
 countries = {
     'austria': u('Австрия'),
@@ -73,7 +74,7 @@ countries = {
     'costa-rica': u('Коста-Рика'),
     'cuba': u('Куба'),
     'kuwait': u('Кувейт'),
-    'kyrgyzstan': u('Киргизия'),
+    'kyrgyzstan': u('Кыргызстан'),
     'laos': u('Лаос'),
     'latvia': u('Латвия'),
     'lesotho': u('Лесото'),
