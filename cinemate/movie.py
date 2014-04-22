@@ -378,7 +378,7 @@ class Movie(BaseCinemate):
         :param per_page: количество записей в выборке
             (по умолчанию 10, максимум 25)
         :type per_page: :py:class:`int`
-        :return: cписок фильмов
+        :return: список фильмов
         :rtype: :py:class:`list`
         :raises ValueError: вызывается если указан один из параметров
             ``order_to``/``order_from``, но не указан ``order_by``
