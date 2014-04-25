@@ -18,6 +18,11 @@ var/
 .installed.cfg
 *.egg
 
+# Sphinx doc
+#/docs/_build/
+#/docs/_static/
+#/docs/_templates/
+
 # py.test
 *,cover
 .coverage
