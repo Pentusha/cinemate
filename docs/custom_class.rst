@@ -22,7 +22,7 @@
         """ Собственный класс для работы с ссылками. """
         @classmethod
         def for_movie(cls, movie_id):
-            # your code here
+            """ your code here """
 
 
     class CinemateExtra(Cinemate):
@@ -30,8 +30,10 @@
         def __init__(self, *args, **kwargs):
             super(CinemateExtra, self).__init__(*args, **kwargs)
             self.session = session()
+            # переопределение класса movie
             self.movie = type('movie', (MovieWithLinks,), {'cinemate': self})
+            # добавление класса link
             self.link = type('link', (Link,), {'cinemate': self})
 
         def login(self):
-            # your code here
+            """ your code here """

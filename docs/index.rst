@@ -13,6 +13,7 @@
    person
    account
    stats
+   custom_class
 
 
 Дополнительно
