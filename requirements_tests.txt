@@ -1,7 +1,6 @@
 -r requirements.txt
 tox
-HTTPretty
 pytest
-pytest-cov
+pytest-httpretty
 pytest-pep8
 coveralls

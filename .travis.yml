@@ -3,13 +3,15 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
-#  - "3.4" not yet http://docs.travis-ci.com/user/languages/python/
+  - "3.4"
+  - "pypy"
 # command to install dependencies
 install: "pip install -r requirements_tests.txt"
 # command to run tests
 script:
   - py.test
-  - py.test --cov cinemate tests/ --cov-report annotate
-  - py.test --pep8 cinemate
+  - coverage run --source cinemate -m py.test
+  - coverage report
+  - py.test --pep8 cinemate tests
 after_success:
   - coveralls

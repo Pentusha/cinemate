@@ -1,77 +1,80 @@
 # coding=utf-8
-from httpretty import activate
+import pytest
+from pytest_httpretty import stub_get
 from six import u
 
 from cinemate.person import Photo
 from tests.mock import reqresp as rr
-from tests.test_cinemate import CinemateTestCase
 
 
-class PersonTestCase(CinemateTestCase):
-    @activate
-    def test_person(self):
-        self.register_uri(**rr['person'])
-        person = self.cin.person.get(3971)
-        self.assertIsInstance(person, self.cin.person)
-        self.assertEqual(person.name, u('Джейк Джилленхол'))
-        self.assertEqual(person.name_original, 'Jake Gyllenhaal')
-        test_photo = Photo(
-            small='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.small.jpg',
-            medium='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.medium.jpg',
-            big='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.big.jpg'
-        )
-        self.assertIsInstance(person.photo, Photo)
-        self.assertEqual(str(person.photo), '<Photo big/medium/small>')
-        self.assertEqual(person.photo.small, test_photo.small)
-        self.assertEqual(person.photo.medium, test_photo.medium)
-        self.assertEqual(person.photo.big, test_photo.big)
-        self.assertEqual(person.url, 'http://cinemate.cc/person/3971/')
-        self.assertEqual(str(person), '<Person 3971 Jake Gyllenhaal>')
+@pytest.mark.httpretty
+def test_person(cin):
+    stub_get(**rr['person'])
+    person = cin.person.get(3971)
+    assert isinstance(person, cin.person)
+    assert person.name == u('Джейк Джилленхол')
+    assert person.name_original == 'Jake Gyllenhaal'
+    photo = 'http://c.cinemate.cc/media/images/photo/j/3971/1290595484'
+    test_photo = Photo(
+        small=photo + '.small.jpg',
+        medium=photo + '.medium.jpg',
+        big=photo + '.big.jpg'
+    )
+    assert isinstance(person.photo, Photo)
+    assert str(person.photo) == '<Photo big/medium/small>'
+    assert person.photo.small == test_photo.small
+    assert person.photo.medium == test_photo.medium
+    assert person.photo.big == test_photo.big
+    assert person.url == 'http://cinemate.cc/person/3971/'
+    assert str(person) == '<Person 3971 Jake Gyllenhaal>'
 
-    @activate
-    def test_person_movies(self):
-        self.register_uri(**rr['person.movies'])
-        movies = self.cin.person(43083).movies()
-        self.assertIsInstance(movies, dict)
 
-        self.assertIn('director', movies)
-        director_movies = movies['director']
-        self.assertIsInstance(director_movies, list)
-        self.assertEqual(len(director_movies), 5)
-        movie = director_movies[0]
-        self.assertIsInstance(movie, self.cin.movie)
-        self.assertEqual(movie.id, 79144)
-        self.assertEqual(movie.type, 'movie')
-        self.assertEqual(movie.runtime, 105)
+@pytest.mark.httpretty
+def test_person_movies(cin):
+    stub_get(**rr['person.movies'])
+    movies = cin.person(43083).movies()
+    assert isinstance(movies, dict)
 
-        self.assertIn('actor', movies)
-        actor_movies = movies['actor']
-        self.assertIsInstance(actor_movies, list)
-        self.assertEqual(len(actor_movies), 2)
-        movie = actor_movies[0]
-        self.assertIsInstance(movie, self.cin.movie)
-        self.assertEqual(movie.id, 79144)
-        self.assertEqual(movie.type, 'movie')
-        self.assertEqual(movie.runtime, 105)
+    assert 'director' in movies
+    director_movies = movies['director']
+    assert isinstance(director_movies, list)
+    assert len(director_movies) == 5
+    movie = director_movies[0]
+    assert isinstance(movie, cin.movie)
+    assert movie.id == 79144
+    assert movie.type == 'movie'
+    assert movie.runtime == 105
 
-    @activate
-    def test_person_search(self):
-        self.register_uri(**rr['person.search'])
-        lst = self.cin.person.search(u('гиленхол'))
-        self.assertIsInstance(lst, list)
-        self.assertEqual(len(lst), 7)
-        person = lst[0]
-        self.assertIsInstance(person, self.cin.person)
-        self.assertEqual(person.id, 3971)
-        self.assertEqual(person.name, u('Джейк Джилленхол'))
-        self.assertEqual(person.name_original, 'Jake Gyllenhaal')
-        test_photo = Photo(
-            small='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.small.jpg',
-            medium='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.medium.jpg',
-            big='http://c.cinemate.cc/media/images/photo/j/3971/1290595484.big.jpg'
-        )
-        self.assertIsInstance(person.photo, Photo)
-        self.assertEqual(person.photo.small, test_photo.small)
-        self.assertEqual(person.photo.medium, test_photo.medium)
-        self.assertEqual(person.photo.big, test_photo.big)
-        self.assertEqual(person.url, 'http://cinemate.cc/person/3971/')
+    assert 'actor' in movies
+    actor_movies = movies['actor']
+    assert isinstance(actor_movies, list)
+    assert len(actor_movies) == 2
+    movie = actor_movies[0]
+    assert isinstance(movie, cin.movie)
+    assert movie.id == 79144
+    assert movie.type == 'movie'
+    assert movie.runtime == 105
+
+
+@pytest.mark.httpretty
+def test_person_search(cin):
+    stub_get(**rr['person.search'])
+    lst = cin.person.search(u('гиленхол'))
+    assert isinstance(lst, list)
+    assert len(lst) == 7
+    person = lst[0]
+    assert isinstance(person, cin.person)
+    assert person.id == 3971
+    assert person.name == u('Джейк Джилленхол')
+    assert person.name_original == 'Jake Gyllenhaal'
+    photo = 'http://c.cinemate.cc/media/images/photo/j/3971/1290595484'
+    test_photo = Photo(
+        small=photo + '.small.jpg',
+        medium=photo + '.medium.jpg',
+        big=photo + '.big.jpg'
+    )
+    assert isinstance(person.photo, Photo)
+    assert person.photo.small == test_photo.small
+    assert person.photo.medium == test_photo.medium
+    assert person.photo.big == test_photo.big
+    assert person.url == 'http://cinemate.cc/person/3971/'

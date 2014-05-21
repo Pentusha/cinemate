@@ -47,7 +47,8 @@ class require(object):
     def __call__(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            """ Декорируемая функция
+            """ Декорируемая функция.
+
             :param args: неименованные параметры декорируемой функции
             :type args: :py:class:`tuple`
             :param kwargs: именованные параметры декорируемой функции

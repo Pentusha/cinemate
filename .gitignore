@@ -23,6 +23,9 @@ docs/_build/
 docs/_static/
 docs/_templates/
 
+# tox
+.tox/
+
 # py.test
 *,cover
 .coverage

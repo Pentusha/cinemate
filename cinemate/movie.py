@@ -116,7 +116,7 @@ class Title(BaseCinemate):
         :param dct: словарь, возвращаемый API
         :type dct: :py:class:`dict`
         :return: фильм
-        :rtype: ``Movie``
+        :rtype: ``.Movie``
         """
         attrs = {k: dct.get(v) for k, v in iteritems(cls.fields) if v in dct}
         return cls(**attrs)
@@ -154,7 +154,7 @@ class Poster(BaseCinemate):
         return cls(**{k: dct[k].get('url') for k in cls.fields if k in dct})
 
     def __unicode__(self):
-        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
+        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if v)
         return '<Poster {sizes}>'.format(sizes=sizes)
 
 
@@ -171,7 +171,7 @@ class Release(BaseCinemate):
         self.russia = parse_date(russia)
 
     def __unicode__(self):
-        fields = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
+        fields = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if v)
         return '<Release {fields}>'.format(fields=fields)
 
 

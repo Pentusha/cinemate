@@ -1,62 +1,67 @@
 # coding=utf-8
 from datetime import datetime
 
-from httpretty import activate
+import pytest
+from pytest_httpretty import stub_get
 from six import u
 
-from tests.mock import reqresp as rr
-from tests.test_cinemate import CinemateTestCase
+from .mock import reqresp as rr
 
 
-class AccountTestCase(CinemateTestCase):
-    @activate
-    def test_auth(self):
-        self.register_uri(**rr['account.auth'])
-        self.cin.account.auth()
-        self.assertEqual(self.cin.passkey, 'of3k4oasd9498dfvjh5hthhgfgdfy')
+@pytest.mark.httpretty
+def test_auth(cin):
+    stub_get(**rr['account.auth'])
+    cin.account.auth()
+    assert cin.passkey == 'of3k4oasd9498dfvjh5hthhgfgdfy'
 
-    @activate
-    def test_profile(self):
-        self.register_uri(**rr['account.profile'])
-        profile = self.cin.account.profile()
-        self.assertIsInstance(profile, dict)
-        self.assertEqual(profile['username'], 'UserName')
-        self.assertEqual(profile['reputation'], 125)
-        self.assertEqual(profile['review_count'], 11)
-        self.assertEqual(profile['gold_badges'], 2)
-        self.assertEqual(profile['silver_badges'], 14)
-        self.assertEqual(profile['bronze_badges'], 21)
-        self.assertEqual(profile['unread_pm_count'], 3)
-        self.assertEqual(profile['unread_forum_count'], 7)
-        self.assertEqual(profile['unread_updatelist_count'], 2)
-        self.assertEqual(profile['subscription_count'], 96)
 
-    @activate
-    def test_updatelist(self):
-        self.register_uri(**rr['account.updatelist'])
-        lst = self.cin.account.updatelist()
-        first = lst[0]
-        self.assertIsInstance(lst, list)
-        self.assertEqual(len(lst), 4)
-        self.assertIsInstance(first, dict)
-        self.assertEqual(first['date'], datetime(2011, 4, 9, 15, 38, 30))
-        self.assertIsInstance(first['for_object'], self.cin.movie)
-        self.assertEqual(first['description'], u('Новая раздача'))
-        self.assertEqual(first['url'], 'http://cinemate.cc/watchlist/a415ef22a4b7ebf24bc54d7ad9a92fa4612cb49f/read/400813/')
-        self.assertEqual(first['new'], 1)
+@pytest.mark.httpretty
+def test_profile(cin):
+    stub_get(**rr['account.profile'])
+    profile = cin.account.profile()
+    assert isinstance(profile, dict)
+    assert profile['username'] == 'UserName'
+    assert profile['reputation'] == 125
+    assert profile['review_count'] == 11
+    assert profile['gold_badges'] == 2
+    assert profile['silver_badges'] == 14
+    assert profile['bronze_badges'] == 21
+    assert profile['unread_pm_count'] == 3
+    assert profile['unread_forum_count'] == 7
+    assert profile['unread_updatelist_count'] == 2
+    assert profile['subscription_count'] == 96
 
-    @activate
-    def test_watchlist(self):
-        self.register_uri(**rr['account.watchlist'])
-        wlst = self.cin.account.watchlist()
-        self.assertIsInstance(wlst, dict)
-        self.assertIn('movie', wlst)
-        self.assertIn('person', wlst)
-        self.assertIsInstance(wlst['movie'], list)
-        self.assertIsInstance(wlst['person'], list)
-        self.assertEqual(len(wlst['movie']), 2)
-        self.assertEqual(len(wlst['person']), 2)
-        movie = wlst['movie'][0]
-        self.assertIsInstance(movie, self.cin.movie)
-        person = wlst['person'][0]
-        self.assertIsInstance(person, self.cin.person)
+
+@pytest.mark.httpretty
+def test_updatelist(cin):
+    stub_get(**rr['account.updatelist'])
+    lst = cin.account.updatelist()
+    first = lst[0]
+    assert isinstance(lst, list)
+    assert len(lst) == 4
+    assert isinstance(first, dict)
+    assert first['date'] == datetime(2011, 4, 9, 15, 38, 30)
+    assert isinstance(first['for_object'], cin.movie)
+    assert first['description'] == u('Новая раздача')
+    assert first['url'] == (
+        'http://cinemate.cc/watchlist/'
+        'a415ef22a4b7ebf24bc54d7ad9a92fa4612cb49f/read/400813/'
+    )
+    assert first['new'] == 1
+
+
+@pytest.mark.httpretty
+def test_watchlist(cin):
+    stub_get(**rr['account.watchlist'])
+    wlst = cin.account.watchlist()
+    assert isinstance(wlst, dict)
+    assert 'movie' in wlst
+    assert 'person' in wlst
+    assert isinstance(wlst['movie'], list)
+    assert isinstance(wlst['person'], list)
+    assert len(wlst['movie']) == 2
+    assert len(wlst['person']) == 2
+    movie = wlst['movie'][0]
+    assert isinstance(movie, cin.movie)
+    person = wlst['person'][0]
+    assert isinstance(person, cin.person)
