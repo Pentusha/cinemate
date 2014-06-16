@@ -3,11 +3,10 @@
     Модуль реализует класс персоны Person,
     а также класс фотографии персоны Photo
 """
-from six import iteritems
-from .utils import require, BaseCinemate
+from .utils import require, BaseCinemate, BaseImage
 
 
-class Photo(BaseCinemate):
+class Photo(BaseImage):
     """ Фотография персоны. Включает в себя 3 тега со ссылками на фотографии
     разных размеров.
 
@@ -18,30 +17,6 @@ class Photo(BaseCinemate):
     :param big: фотография в большом разрешении
     :type: big: :py:class:`str`
     """
-    fields = ('small', 'medium', 'big')
-
-    def __init__(self, small, medium, big):
-        self.small = small
-        self.medium = medium
-        self.big = big
-
-    @classmethod
-    def from_dict(cls, dct):
-        """ Фотография персоны из словаря, возвращаемого API.
-
-        :param dct: словарь, возвращаемый API
-        :type dct: :py:class:`dict`
-        :return: фотография
-        :rtype: :class:`.Photo`
-        """
-        if dct is None:
-            return
-        fields = {k: dct.get(k).get('url') for k in cls.fields if k in dct}
-        return cls(**fields)
-
-    def __unicode__(self):
-        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if k)
-        return '<Photo {sizes}>'.format(sizes=sizes)
 
 
 class Person(BaseCinemate):

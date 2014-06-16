@@ -17,7 +17,7 @@ class Tox(TestCommand):
         self.test_suite = True
 
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import tox
         errno = tox.cmdline(self.test_args)
         sys.exit(errno)
@@ -57,13 +57,13 @@ setup(
     platforms='any',
     classifiers=[
         # As from https://pypi.python.org/pypi?:action=list_classifiers
-        #'Development Status :: 1 - Planning',
-        #'Development Status :: 2 - Pre-Alpha',
-        #'Development Status :: 3 - Alpha',
-        #'Development Status :: 4 - Beta',
+        # 'Development Status :: 1 - Planning',
+        # 'Development Status :: 2 - Pre-Alpha',
+        # 'Development Status :: 3 - Alpha',
+        # 'Development Status :: 4 - Beta',
         'Development Status :: 5 - Production/Stable',
-        #'Development Status :: 6 - Mature',
-        #'Development Status :: 7 - Inactive',
+        # 'Development Status :: 6 - Mature',
+        # 'Development Status :: 7 - Inactive',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
         'Intended Audience :: Information Technology',

@@ -4,6 +4,9 @@
     метакласс :class:`.CommonMeta` для реализации служебных методов;
     - класс :class:`.BaseCinemate` от которого наследуются все остальные
       классы проекта;
+    - классы :class:`.BaseImage` и :class:`.BaseSlug` в которые вынесен общий
+      код для :class:`person.Photo`, :class:`movie.Poster`,
+      :class:`movie.Country`, :class:`movie.Genre`;
     - декоратор :func:`require`, который проверяет у экземпляра класса наличие
       указаных аттрибутов;
     - функции :func:`parse_date`, :func:`parse_datetime` для разбора дат и
@@ -12,7 +15,7 @@
 """
 from datetime import datetime
 from functools import wraps
-from six import add_metaclass, PY2
+from six import add_metaclass, iteritems, PY2
 
 
 class CommonMeta(type):
@@ -31,6 +34,78 @@ class CommonMeta(type):
 class BaseCinemate(object):
     """ От этого класса наследуются все остальные классы проекта.
     """
+
+
+class BaseImage(BaseCinemate):
+    fields = ('small', 'medium', 'big')
+
+    def __init__(self, small, medium, big):
+        self.small = small
+        self.medium = medium
+        self.big = big
+
+    @classmethod
+    def from_dict(cls, dct):
+        """ Изображение из словаря, возвращаемого API.
+
+        :param dct: словарь, возвращаемый API
+        :type dct: :py:class:`dict`
+        :return: изображение
+        :rtype: :class:`{module_name}.{class_name}`
+        """.format(
+            module_name=cls.__module__,
+            class_name=cls.__name__,
+        )
+        if dct is None:
+            return
+        fields = {k: dct.get(k).get('url') for k in cls.fields if k in dct}
+        return cls(**fields)
+
+    def __unicode__(self):
+        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if v)
+        return '<{class_name} {sizes}>'.format(
+            class_name=self.__class__.__name__,
+            sizes=sizes,
+        )
+
+
+class BaseSlug(BaseCinemate):
+    def __init__(self, name, slug=None):
+        self.name = name
+        self.slug = slug or self.slug_by_name(name)
+
+    @classmethod
+    def from_dict(cls, dct):
+        """ Задать объект из словаря, возвращаемого API.
+
+        :param dct: словарь, возвращаемый API
+        :type dct: :py:class:`dict`
+        :return: объект
+        :rtype: :class:`{module_name}.{class_name}`
+        """.format(
+            module_name=cls.__module__,
+            class_name=cls.__name__,
+        )
+        name = dct.get('name')
+        slug = dct.get('slug', cls.slug_by_name(name))
+        return cls(name=name, slug=slug)
+
+    @classmethod
+    def slug_by_name(cls, name):
+        """ Получение slug объекта по его названию на русском языке.
+
+        :param name: имя объекта на русском языке
+        :return: slug объекта
+        :rtype: :py:class:`str`
+        """
+        finder = (slug for slug, rus in iteritems(cls.mapping) if rus == name)
+        return next(finder, None)
+
+    def __unicode__(self):
+        return '<{class_name}: {name}>'.format(
+            class_name=self.__class__.__name__,
+            name=self.slug or self.name,
+        )
 
 
 # noinspection PyPep8Naming
