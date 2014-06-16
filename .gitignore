@@ -4,34 +4,14 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
-bin/
 build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
 *.egg-info/
-.installed.cfg
-*.egg
 
 # Sphinx doc
-docs/_build/
-docs/_static/
-docs/_templates/
+docs/*/
 
 # tox
 .tox/
 
 # py.test
-*,cover
 .coverage
-
-# Vagrant
-Vagrantfile
-.vagrant
-
-

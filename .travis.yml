@@ -1,17 +1,16 @@
 language: python
-python:
-  - "2.7"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-  - "pypy"
+env:
+  - TOXENV=flake8
+  - TOXENV=docs
+  - TOXENV=py27
+  - TOXENV=py32
+  - TOXENV=py33
+  - TOXENV=py34
+  - TOXENV=pypy
 # command to install dependencies
 install: "pip install -r requirements_tests.txt"
 # command to run tests
 script:
-  - py.test
-  - coverage run --source cinemate -m py.test
-  - coverage report
-  - py.test --pep8 cinemate tests
+  - tox -e $TOXENV
 after_success:
   - coveralls

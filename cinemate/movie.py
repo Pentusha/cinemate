@@ -6,11 +6,11 @@
 from datetime import date, datetime
 from six import iteritems
 from six.moves import map
-from .utils import require, parse_date, BaseCinemate
 from .lists import countries, genres
+from .utils import require, parse_date, BaseCinemate, BaseImage, BaseSlug
 
 
-class Country(BaseCinemate):
+class Country(BaseSlug):
     """ `Страна <http://cinemate.cc/movie/country/>`_ производства фильма.
 
     :param name: имя страны на русском языке
@@ -18,39 +18,10 @@ class Country(BaseCinemate):
     :param slug: slug страны
     :type slug: :py:class:`str`
     """
-    def __init__(self, name, slug=None):
-        self.name = name
-        self.slug = slug or self.slug_by_name(name)
-
-    @classmethod
-    def from_dict(cls, dct):
-        """ Задать страну фильма из словаря, возвращаемого API.
-
-        :param dct: словарь, возвращаемый API
-        :type dct: :py:class:`dict`
-        :return: страна
-        :rtype: :class:`.Country`
-        """
-        name = dct.get('name')
-        slug = dct.get('slug', cls.slug_by_name(name))
-        return cls(name=name, slug=slug)
-
-    @classmethod
-    def slug_by_name(cls, name):
-        """ Получение slug страны по её названию на русском языке.
-
-        :param name: имя страны на русском языке
-        :return: slug страны
-        :rtype: :py:class:`str`
-        """
-        finder = (slug for slug, rus in iteritems(countries) if rus == name)
-        return next(finder, None)
-
-    def __unicode__(self):
-        return '<Country: {name}>'.format(name=self.slug or self.name)
+    mapping = countries
 
 
-class Genre(BaseCinemate):
+class Genre(BaseSlug):
     """ `Жанр фильма <http://cinemate.cc/movie/genre/>`_.
 
     :param name: название жанра
@@ -58,34 +29,7 @@ class Genre(BaseCinemate):
     :param slug: slug жанра
     :type slug: :py:class:`str`
     """
-    def __init__(self, name, slug=None):
-        self.name = name
-        self.slug = slug or self.slug_by_name(name)
-
-    @classmethod
-    def from_dict(cls, dct):
-        """ Задать жанр фильма из словаря, возвращаемого API.
-
-        :param dct: словарь, возвращаемый API
-        :type dct: :py:class:`dict`
-        :return: жанр
-        :rtype: :class:`.Genre`
-        """
-        return cls(name=dct.get('name'), slug=dct.get('slug'))
-
-    @classmethod
-    def slug_by_name(cls, name):
-        """ Получениу slug жанра по его названию на русском языке.
-
-        :param name: имя жанра на русском языке
-        :return: slug страны
-        :rtype: :py:class:`str`
-        """
-        finder = (slug for slug, rus in iteritems(genres) if rus == name)
-        return next(finder, None)
-
-    def __unicode__(self):
-        return '<Genre: {name}>'.format(name=self.slug or self.name)
+    mapping = genres
 
 
 class Title(BaseCinemate):
@@ -125,7 +69,7 @@ class Title(BaseCinemate):
         return self.original or self.russian or ''
 
 
-class Poster(BaseCinemate):
+class Poster(BaseImage):
     """ Постер фильма в трёх размерах.
 
     :param small: ссылка на картинку маленького размера
@@ -135,27 +79,6 @@ class Poster(BaseCinemate):
     :param big: ссылка на картинку большого размера
     :type big: :py:class:`str`
     """
-    fields = ('small', 'medium', 'big')
-
-    def __init__(self, small='', medium='', big=''):
-        self.small = small
-        self.medium = medium
-        self.big = big
-
-    @classmethod
-    def from_dict(cls, dct):
-        """ Постер фильма из словаря, возвращаемого API
-
-        :param dct: словарь, возвращаемый API
-        :type dct: dict
-        :return: дата релиза
-        :rtype: :class:`.Poster`
-        """
-        return cls(**{k: dct[k].get('url') for k in cls.fields if k in dct})
-
-    def __unicode__(self):
-        sizes = '/'.join(k for k, v in sorted(iteritems(self.__dict__)) if v)
-        return '<Poster {sizes}>'.format(sizes=sizes)
 
 
 class Release(BaseCinemate):

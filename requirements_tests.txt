@@ -2,5 +2,4 @@
 tox
 pytest
 pytest-httpretty
-pytest-pep8
 coveralls
