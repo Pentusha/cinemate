@@ -159,6 +159,7 @@ class Movie(BaseCinemate):
         'imdb', 'kinopoisk', 'country', 'genre', 'director', 'cast', 'trailer',
         'url',
     )
+    cinemate = None
 
     def __init__(self, movie_id, **kwargs):
         """ При инициализации принимает все именованные аргументы и делает их
@@ -181,7 +182,6 @@ class Movie(BaseCinemate):
         :rtype: :class:`.Movie`
         """
         movie_id = int(dct['url'].split('/')[-2])
-        cinemate = getattr(cls, 'cinemate')
         cast = dct.get('cast', {}).get('person', [])
         director = dct.get('director', {}).get('person', [])
         release = Release(
@@ -213,8 +213,8 @@ class Movie(BaseCinemate):
             url=dct.get('url'),
             genre=list(map(Genre.from_dict, genre)),
             country=list(map(Country.from_dict, country)),
-            cast=list(map(cinemate.person.from_dict, cast)),
-            director=list(map(cinemate.person.from_dict, director)),
+            cast=list(map(cls.cinemate.person.from_dict, cast)),
+            director=list(map(cls.cinemate.person.from_dict, director)),
         )
 
     @classmethod
@@ -238,11 +238,10 @@ class Movie(BaseCinemate):
         :rtype: :class:`.Movie`
         """
         url = 'movie'
-        cinemate = getattr(self, 'cinemate')
         params = {'id': self.id}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = self.cinemate.api_get(url, apikey=True, params=params)
         movie = req.json().get('movie')
-        return cinemate.movie.from_dict(movie)
+        return self.cinemate.movie.from_dict(movie)
 
     @classmethod
     @require('apikey')
@@ -259,9 +258,8 @@ class Movie(BaseCinemate):
         :rtype: :py:class:`list`
         """
         url = 'movie.search'
-        cinemate = getattr(cls, 'cinemate')
         params = {'term': term}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = cls.cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('movie', [])
         return list(map(cls.from_dict, movies))
 
@@ -333,9 +331,8 @@ class Movie(BaseCinemate):
             'per_page': kwargs.get('per_page'),
         }
         url = 'movie.list'
-        cinemate = getattr(cls, 'cinemate')
         params = {k: v for k, v in iteritems(params) if v is not None}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = cls.cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('movie', {})
         return list(map(cls.from_dict, movies))
 
