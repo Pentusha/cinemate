@@ -1,5 +1,6 @@
 import pytest
 from cinemate import Cinemate
+from .data import reqresp
 
 
 @pytest.fixture
@@ -10,3 +11,8 @@ def cin():
         passkey='PASSKEY',
         apikey='APIKEY',
     )
+
+
+@pytest.fixture
+def rr():
+    return reqresp

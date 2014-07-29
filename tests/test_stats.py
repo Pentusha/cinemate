@@ -1,11 +1,10 @@
 # coding=utf-8
 import pytest
 from pytest_httpretty import stub_get
-from .mock import reqresp as rr
 
 
 @pytest.mark.httpretty
-def test_new(cin):
+def test_new(cin, rr):
     stub_get(**rr['stats.new'])
     stats = cin.stats.new()
     assert isinstance(stats, dict)

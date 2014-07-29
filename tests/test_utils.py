@@ -47,10 +47,10 @@ def test_get_cinemate(cin):
     try:
         utils.__get_cinemate__(dummy1())
     except AttributeError:
-        assert False, 'Dummy1 raises AttributeError'
+        pytest.fail('Dummy1 raises AttributeError')
     try:
         utils.__get_cinemate__(dummy2())
     except AttributeError:
-        assert False, 'Dummy2 raises AttributeError'
+        pytest.fail('Dummy2 raises AttributeError')
     with pytest.raises(AttributeError):
         utils.__get_cinemate__(dummy3())

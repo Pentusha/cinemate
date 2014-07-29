@@ -3,15 +3,13 @@ import pytest
 from pytest_httpretty import stub_get
 from requests.status_codes import codes
 
-from tests.mock import reqresp as rr
-
 
 def test_str(cin):
     assert str(cin) == '<Cinemate: USERNAME>'
 
 
 @pytest.mark.httpretty
-def test_api_get(cin):
+def test_api_get(cin, rr):
     correct_url = 'stats.new'
     incorect_url = 'stats.wtf'
     wrong_status_url = 'account.wrong_status_code'

@@ -8,6 +8,8 @@ from .utils import BaseCinemate
 class Stats(BaseCinemate):
     """ Статистика сайта.
     """
+    cinemate = None
+
     def new(self):
         """ Метод API `stats.new <http://cinemate.cc/help/api/stats.new/>`_
         возвращает статистику сайта за последние сутки.
@@ -16,6 +18,5 @@ class Stats(BaseCinemate):
         :rtype: :py:class:`dict`
         """
         url = 'stats.new'
-        cinemate = getattr(self, 'cinemate')
-        req = cinemate.api_get(url)
+        req = self.cinemate.api_get(url)
         return req.json()

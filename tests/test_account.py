@@ -5,18 +5,16 @@ import pytest
 from pytest_httpretty import stub_get
 from six import u
 
-from .mock import reqresp as rr
-
 
 @pytest.mark.httpretty
-def test_auth(cin):
+def test_auth(cin, rr):
     stub_get(**rr['account.auth'])
     cin.account.auth()
     assert cin.passkey == 'of3k4oasd9498dfvjh5hthhgfgdfy'
 
 
 @pytest.mark.httpretty
-def test_profile(cin):
+def test_profile(cin, rr):
     stub_get(**rr['account.profile'])
     profile = cin.account.profile()
     assert isinstance(profile, dict)
@@ -33,7 +31,7 @@ def test_profile(cin):
 
 
 @pytest.mark.httpretty
-def test_updatelist(cin):
+def test_updatelist(cin, rr):
     stub_get(**rr['account.updatelist'])
     lst = cin.account.updatelist()
     first = lst[0]
@@ -51,7 +49,7 @@ def test_updatelist(cin):
 
 
 @pytest.mark.httpretty
-def test_watchlist(cin):
+def test_watchlist(cin, rr):
     stub_get(**rr['account.watchlist'])
     wlst = cin.account.watchlist()
     assert isinstance(wlst, dict)
