@@ -1,8 +1,23 @@
 # coding=utf-8
-from datetime import datetime
 import pytest
+from datetime import datetime
+from mock import patch
+from cinemate import utils, Cinemate
 
-from cinemate import utils
+
+def test_config_load(fake_config):
+    assert fake_config._auth == {
+        'username': 'TEST_USERNAME',
+        'password': 'TEST_PASSWORD',
+        'passkey': 'TEST_PASSKEY',
+        'apikey': 'TEST_APIKEY',
+    }
+
+
+@patch('cinemate.utils._open')
+def test_config_save(open_mock, fake_config):
+    fake_config.save()
+    open_mock.assert_called_once_with(fake_config.filename, 'w')
 
 
 @pytest.mark.parametrize(

@@ -2,10 +2,20 @@
 import pytest
 from pytest_httpretty import stub_get
 from requests.status_codes import codes
+from cinemate import Cinemate
 
 
 def test_str(cin):
     assert str(cin) == '<Cinemate: USERNAME>'
+
+
+def test_cinemate_wo_params(fake_config):
+    cin = Cinemate()
+    fake_config.apply(cin)
+    assert cin.username == 'TEST_USERNAME'
+    assert cin.password == 'TEST_PASSWORD'
+    assert cin.passkey == 'TEST_PASSKEY'
+    assert cin.apikey == 'TEST_APIKEY'
 
 
 @pytest.mark.httpretty

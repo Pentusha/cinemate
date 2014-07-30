@@ -13,9 +13,64 @@
       времени в формате ISO.
 
 """
+import yaml
+import __main__ as main
 from datetime import datetime
 from functools import wraps
+from getpass import getpass
+from os.path import exists, expanduser, join
 from six import add_metaclass, iteritems, PY2
+from six.moves import input
+
+
+def _open(*args, **kwargs):
+    """ Используется для подмены содержимого при тестировании
+    """
+    return open(*args, **kwargs)
+
+
+def _input(*args, **kwargs):
+    return input(*args, **kwargs)
+
+
+def _getpass(*args, **kwargs):
+    return getpass(*args, **kwargs)
+
+
+class CinemateConfig(object):
+    module = yaml
+    filename = join(expanduser('~'), '.cinemate')
+    _auth = {}.fromkeys(('username', 'password', 'apikey', 'passkey'))
+    _config = {'auth': _auth}
+
+    def __init__(self):
+        interactive = not hasattr(main, '__file__')
+        if interactive and not exists(self.filename):
+            self.interactive_input()
+            self.save()
+        else:
+            self.load()
+
+    def interactive_input(self):
+        self._auth['username'] = _input('Username: ')
+        self._auth['password'] = _getpass('Password: ')
+        self._auth['passkey'] = _getpass('Passkey: ')
+        self._auth['apikey'] = _getpass('Apikey: ')
+
+    def apply(self, obj):
+        for field, value in iteritems(self._auth):
+            setattr(obj, field, value)
+
+    def load(self, filename=None):
+        with _open(filename or self.filename) as cfg:
+            self._config = self.module.load(cfg)
+            self._auth = self._config['auth']
+
+    def save(self, filename=None):
+        for field, value in iteritems(self._auth):
+            self._config['auth'][field] = value
+        with _open(filename or self.filename, 'w') as cfg:
+            self.module.dump(self._config, cfg, default_flow_style=False)
 
 
 class CommonMeta(type):
