@@ -1,5 +1,6 @@
 -r requirements.txt
 tox
+mock
 pytest
 pytest-httpretty
 coveralls

@@ -2,7 +2,7 @@
 import pytest
 from datetime import datetime
 from mock import patch
-from cinemate import utils, Cinemate
+from cinemate import utils
 
 
 def test_config_load(fake_config):
