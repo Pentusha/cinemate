@@ -1,21 +1,26 @@
 # coding=utf-8
 import pytest
+from mock import patch
 from pytest_httpretty import stub_get
 from requests.status_codes import codes
 from cinemate import Cinemate
+from .conftest import ContextualStringIO
 
 
 def test_str(cin):
     assert str(cin) == '<Cinemate: USERNAME>'
 
 
-def test_cinemate_wo_params(fake_config):
+@patch('cinemate.utils._exists')
+@patch('cinemate.utils._open')
+def test_cinemate_wo_params(open_mock, exists_mock, config_content):
+    open_mock.return_value = ContextualStringIO(config_content)
+    exists_mock.return_value = True
     cin = Cinemate()
-    fake_config.apply(cin)
-    assert cin.username == 'TEST_USERNAME'
-    assert cin.password == 'TEST_PASSWORD'
-    assert cin.passkey == 'TEST_PASSKEY'
-    assert cin.apikey == 'TEST_APIKEY'
+    assert cin.username == 'MOCK_USERNAME'
+    assert cin.password == 'MOCK_PASSWORD'
+    assert cin.passkey == 'MOCK_PASSKEY'
+    assert cin.apikey == 'MOCK_APIKEY'
 
 
 @pytest.mark.httpretty

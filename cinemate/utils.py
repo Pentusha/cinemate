@@ -29,6 +29,10 @@ def _open(*args, **kwargs):
     return open(*args, **kwargs)
 
 
+def _exists(*args, **kwargs):
+    return exists(*args, **kwargs)
+
+
 def _input(*args, **kwargs):
     return input(*args, **kwargs)
 
@@ -45,11 +49,23 @@ class CinemateConfig(object):
 
     def __init__(self):
         interactive = not hasattr(main, '__file__')
-        if interactive and not exists(self.filename):
+        if interactive and not self.exists:
             self.interactive_input()
             self.save()
+        elif not self.exists:
+            msg = (
+                'Config file {cfg} does not exists. Create it manually '
+                'or create cinemate instance in interactive mode:\n'
+                '>>> from cinemate import Cinemate\n'
+                '>>> cin = Cinemate()'
+            )
+            raise IOError(msg.format(cfg=self.filename))
         else:
             self.load()
+
+    @property
+    def exists(self, filename=None):
+        return _exists(filename or self.filename)
 
     def interactive_input(self):
         self._auth['username'] = _input('Username: ')

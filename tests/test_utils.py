@@ -5,19 +5,19 @@ from mock import patch
 from cinemate import utils
 
 
-def test_config_load(fake_config):
-    assert fake_config._auth == {
-        'username': 'TEST_USERNAME',
-        'password': 'TEST_PASSWORD',
-        'passkey': 'TEST_PASSKEY',
-        'apikey': 'TEST_APIKEY',
+def test_config_load(mock_config):
+    assert getattr(mock_config, '_auth') == {
+        'username': 'MOCK_USERNAME',
+        'password': 'MOCK_PASSWORD',
+        'passkey': 'MOCK_PASSKEY',
+        'apikey': 'MOCK_APIKEY',
     }
 
 
 @patch('cinemate.utils._open')
-def test_config_save(open_mock, fake_config):
-    fake_config.save()
-    open_mock.assert_called_once_with(fake_config.filename, 'w')
+def test_config_save(open_mock, mock_config):
+    mock_config.save()
+    open_mock.assert_called_once_with(mock_config.filename, 'w')
 
 
 @pytest.mark.parametrize(
