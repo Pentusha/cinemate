@@ -23,6 +23,13 @@ def test_cinemate_wo_params(open_mock, exists_mock, config_content):
     assert cin.apikey == 'MOCK_APIKEY'
 
 
+@patch('cinemate.utils._exists')
+def test_cinemate_raise_wo_params(exists_mock):
+    exists_mock.return_value = False
+    with pytest.raises(IOError):
+        Cinemate()
+
+
 @pytest.mark.httpretty
 def test_api_get(cin, rr):
     correct_url = 'stats.new'
