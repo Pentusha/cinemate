@@ -14,6 +14,41 @@
         'your_apikey'
     )
 
+Конфигурационный файл
+=====================
+
+Если не укзать данные для доступа к сайту (имя пользователя, пароль, passkey, apikey),
+то они будут считываться из файла ``~/.cinemate`` или ``%HOME%\.cinemate`` в зависимости
+от операционной системы.
+Формат файла:
+
+.. code-block:: yaml
+
+    auth:
+      username: your_username
+      password: your_password
+      passkey: your_passkey
+      apikey: apikey
+
+Файл может быть создан автоматически при инициализации основного класса в
+интерактивном режиме:
+
+.. code-block:: python
+
+    >>> from cinemate import Cinemate
+    >>> Cinemate()
+    Username: your_username
+    Password:
+    Passkey:
+    Apikey:
+    <Cinemate: your_username>
+
+В целях безопасности пароль, passkey и apikey не отображаются.
+При инициализации данные будут сохранены и в следующий раз запрашиваться не будут.
+
+Список методов API
+==================
+
 Доступ к методам api осуществляется через аттрибуты объекта cinemate.
 Ниже приведена таблица сооветсвия методов API и данной реализации.
 

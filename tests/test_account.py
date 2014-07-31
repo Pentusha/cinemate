@@ -5,35 +5,35 @@ import pytest
 from pytest_httpretty import stub_get
 from six import u
 
-from .mock import reqresp as rr
-
 
 @pytest.mark.httpretty
-def test_auth(cin):
+def test_auth(cin, rr):
     stub_get(**rr['account.auth'])
     cin.account.auth()
     assert cin.passkey == 'of3k4oasd9498dfvjh5hthhgfgdfy'
 
 
 @pytest.mark.httpretty
-def test_profile(cin):
+def test_profile(cin, rr):
     stub_get(**rr['account.profile'])
     profile = cin.account.profile()
     assert isinstance(profile, dict)
-    assert profile['username'] == 'UserName'
-    assert profile['reputation'] == 125
-    assert profile['review_count'] == 11
-    assert profile['gold_badges'] == 2
-    assert profile['silver_badges'] == 14
-    assert profile['bronze_badges'] == 21
-    assert profile['unread_pm_count'] == 3
-    assert profile['unread_forum_count'] == 7
-    assert profile['unread_updatelist_count'] == 2
-    assert profile['subscription_count'] == 96
+    assert profile == {
+        'username': 'UserName',
+        'reputation': 125,
+        'review_count': 11,
+        'gold_badges': 2,
+        'silver_badges': 14,
+        'bronze_badges': 21,
+        'unread_pm_count': 3,
+        'unread_forum_count': 7,
+        'unread_updatelist_count': 2,
+        'subscription_count': 96,
+    }
 
 
 @pytest.mark.httpretty
-def test_updatelist(cin):
+def test_updatelist(cin, rr):
     stub_get(**rr['account.updatelist'])
     lst = cin.account.updatelist()
     first = lst[0]
@@ -51,7 +51,7 @@ def test_updatelist(cin):
 
 
 @pytest.mark.httpretty
-def test_watchlist(cin):
+def test_watchlist(cin, rr):
     stub_get(**rr['account.watchlist'])
     wlst = cin.account.watchlist()
     assert isinstance(wlst, dict)

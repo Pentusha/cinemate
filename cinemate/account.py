@@ -9,6 +9,8 @@ from .movie import Title
 class Account(BaseCinemate):
     """ Класс для получения пользовательских данных.
     """
+    cinemate = None
+
     @require('username', 'password')
     def auth(self):
         """ Метод API
@@ -18,14 +20,13 @@ class Account(BaseCinemate):
         :return: passkey
         :rtype: :py:class:`str`
         """
-        cinemate = getattr(self, 'cinemate')
         params = {
-            'username': cinemate.username,
-            'password': cinemate.password,
+            'username': self.cinemate.username,
+            'password': self.cinemate.password,
         }
-        req = cinemate.api_get('account.auth', params=params)
-        cinemate.passkey = req.json().get('passkey')
-        return cinemate.passkey
+        req = self.cinemate.api_get('account.auth', params=params)
+        self.cinemate.passkey = req.json().get('passkey')
+        return self.cinemate.passkey
 
     @require('passkey')
     def profile(self):
@@ -37,8 +38,7 @@ class Account(BaseCinemate):
         :rtype: :py:class:`dict`
         """
         url = 'account.profile'
-        cinemate = getattr(self, 'cinemate')
-        req = cinemate.api_get(url, passkey=True)
+        req = self.cinemate.api_get(url, passkey=True)
         return req.json()
 
     @require('passkey')
@@ -51,8 +51,7 @@ class Account(BaseCinemate):
         :rtype: :py:class:`list`
         """
         url = 'account.updatelist'
-        cinemate = getattr(self, 'cinemate')
-        req = cinemate.api_get(url, passkey=True)
+        req = self.cinemate.api_get(url, passkey=True)
         results = req.json().get('item', [])
         for a in results:
             item = a.get('for_object', {})
@@ -61,13 +60,17 @@ class Account(BaseCinemate):
                 person = item['person']
                 person_id = person['id']
                 title = person['title']
-                person = cinemate.person(person_id, name=title)
+                person = self.cinemate.person(person_id, name=title)
                 a['for_object'] = person
             if 'movie' in item:
                 movie = item['movie']
                 title, year = movie['title'].rsplit(' ', 1)
                 year = int(year.lstrip('(').rstrip(')'))
-                movie = cinemate.movie(movie['id'], title=title, year=year)
+                movie = self.cinemate.movie(
+                    movie['id'],
+                    title=title,
+                    year=year
+                )
                 a['for_object'] = movie
         return results
 
@@ -81,8 +84,7 @@ class Account(BaseCinemate):
         :rtype: :py:class:`dict`
         """
         url = 'account.watchlist'
-        cinemate = getattr(self, 'cinemate')
-        req = cinemate.api_get(url, passkey=True)
+        req = self.cinemate.api_get(url, passkey=True)
         json_movies = req.json().get('movie', [])
         json_persons = req.json().get('person', [])
         movies = []
@@ -91,13 +93,17 @@ class Account(BaseCinemate):
             movie_id = m.get('id', m['url'].split('/')[-2])
             title, year = m['name'].rsplit(' ', 1)
             year = int(year.lstrip('(').rstrip(')'))
-            movie = cinemate.movie(movie_id, title=Title(title), year=year)
+            movie = self.cinemate.movie(
+                movie_id,
+                title=Title(title),
+                year=year
+            )
             movie.url = m['url']
             movie.date = parse_datetime(m['date'])
             movies.append(movie)
         for p in json_persons:
             person_id = p.get('id', p['url'].split('/')[-2])
-            person = cinemate.person(person_id, name=p['name'])
+            person = self.cinemate.person(person_id, name=p['name'])
             person.url = p['url']
             person.date = parse_datetime(p['date'])
             persons.append(person)

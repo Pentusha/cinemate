@@ -4,7 +4,7 @@
 """
 from requests import get as http_get
 from requests.status_codes import codes
-from .utils import BaseCinemate
+from .utils import BaseCinemate, CinemateConfig, CommonMeta
 from .account import Account
 from .movie import Movie
 from .person import Person
@@ -26,17 +26,21 @@ class Cinemate(BaseCinemate):
     """
     base_api_url = 'http://api.cinemate.cc/'
 
-    def __init__(self, username, password, passkey, apikey):
+    def __init__(self, username='', password='', passkey='', apikey=''):
         """ Инициация главного класса, все остальные создаются внутри.
         """
-        self.username = username
-        self.password = password
-        self.passkey = passkey
-        self.apikey = apikey
-        self.movie = type('Movie', (Movie,), {'cinemate': self})
-        self.stats = type('Stats', (Stats,), {'cinemate': self})()
-        self.person = type('Person', (Person,), {'cinemate': self})
-        self.account = type('Account', (Account,), {'cinemate': self})()
+        if not all((username, password, passkey, apikey)):
+            self._config = CinemateConfig()
+            self._config.apply(self)
+        else:
+            self.username = username
+            self.password = password
+            self.passkey = passkey
+            self.apikey = apikey
+        self.movie = CommonMeta('Movie', (Movie,), {'cinemate': self})
+        self.stats = CommonMeta('Stats', (Stats,), {'cinemate': self})()
+        self.person = CommonMeta('Person', (Person,), {'cinemate': self})
+        self.account = CommonMeta('Account', (Account,), {'cinemate': self})()
 
     def api_get(self, url, passkey=False, apikey=False, **kwargs):
         """ Получить страницу API.

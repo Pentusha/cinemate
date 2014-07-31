@@ -33,6 +33,8 @@ class Person(BaseCinemate):
     :param url: ссылка на страницу персоны
     :type url: :py:class:`str`
     """
+    cinemate = None
+
     def __init__(self, person_id, **kwargs):
         self.id = int(person_id)
         self.name = kwargs.get('name')
@@ -66,11 +68,10 @@ class Person(BaseCinemate):
         :rtype: :class:`.Person`
         """
         url = 'person'
-        cinemate = getattr(self, 'cinemate')
         params = {'id': self.id}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = self.cinemate.api_get(url, apikey=True, params=params)
         person = req.json().get('person', {})
-        return cinemate.person.from_dict(person)
+        return self.cinemate.person.from_dict(person)
 
     @classmethod
     @require('apikey')
@@ -95,15 +96,14 @@ class Person(BaseCinemate):
         :rtype: :py:class:`dict`
         """
         url = 'person.movies'
-        cinemate = getattr(self, 'cinemate')
         params = {'id': self.id}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = self.cinemate.api_get(url, apikey=True, params=params)
         movies = req.json().get('person').get('movies', {})
         actor = movies.get('actor', {}).get('movie', [])
         director = movies.get('director', {}).get('movie', [])
         return {
-            'actor': list(map(cinemate.movie.from_dict, actor)),
-            'director': list(map(cinemate.movie.from_dict, director)),
+            'actor': list(map(self.cinemate.movie.from_dict, actor)),
+            'director': list(map(self.cinemate.movie.from_dict, director)),
         }
 
     @classmethod
@@ -119,9 +119,8 @@ class Person(BaseCinemate):
         :rtype: :py:class:`list`
         """
         url = 'person.search'
-        cinemate = getattr(cls, 'cinemate')
         params = {'term': term}
-        req = cinemate.api_get(url, apikey=True, params=params)
+        req = cls.cinemate.api_get(url, apikey=True, params=params)
         persons = req.json().get('person', [])
         return list(map(cls.from_dict, persons))
 

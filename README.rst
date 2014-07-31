@@ -1,4 +1,4 @@
-|version| |status| |coverage| |wheel|
+|version| |docs| |build| |coverage| |wheel|
 
 Cinemate - реализация API сайта `cinemate.cc`_ на языке python.
 Реализация использует методы `api v2`_.
@@ -85,7 +85,10 @@ Cinemate - реализация API сайта `cinemate.cc`_ на языке py
 .. |version| image:: http://badge.fury.io/py/cinemate.png
    :alt: PyPI version
    :target: http://badge.fury.io/py/cinemate
-.. |status| image:: http://secure.travis-ci.org/Pentusha/cinemate.png?branch=master
+.. |docs| image:: https://readthedocs.org/projects/cinemate/badge/?version=latest
+    :alt: Docs status
+    :target: https://readthedocs.org/builds/cinemate/
+.. |build| image:: http://secure.travis-ci.org/Pentusha/cinemate.png?branch=master
    :alt: Build status
    :target: https://travis-ci.org/Pentusha/cinemate
 .. |coverage| image:: http://coveralls.io/repos/Pentusha/cinemate/badge.png?branch=master

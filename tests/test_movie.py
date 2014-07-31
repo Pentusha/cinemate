@@ -5,13 +5,11 @@ import pytest
 from pytest_httpretty import stub_get
 from six import u
 
-
 from cinemate.movie import Title, Poster, Release, Rating, Country, Genre
-from tests.mock import reqresp as rr
 
 
 @pytest.mark.httpretty
-def test_movie(cin):
+def test_movie(cin, rr):
     stub_get(**rr['movie'])
     mov = cin.movie.get(68675)
     assert str(mov) == '<Movie 68675 Henry\'s Crime>'
@@ -88,7 +86,7 @@ def test_movie(cin):
 
 
 @pytest.mark.httpretty
-def test_movie_list(cin):
+def test_movie_list(cin, rr):
     stub_get(**rr['movie.list'])
     lst = cin.movie.list()
     assert isinstance(lst, list)
@@ -114,7 +112,7 @@ def test_movie_list(cin):
 
 
 @pytest.mark.httpretty
-def test_movie_search(cin):
+def test_movie_search(cin, rr):
     stub_get(**rr['movie.search'])
     lst = cin.movie.search(u('Пираты кариб'))
     assert isinstance(lst, list)

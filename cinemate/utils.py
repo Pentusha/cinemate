@@ -1,7 +1,8 @@
 # coding=utf-8
 """
     Модуль содержит:
-    метакласс :class:`.CommonMeta` для реализации служебных методов;
+    - класс :class:`.CinemateConfig` для работы с настройками;
+    - метакласс :class:`.CommonMeta` для реализации служебных методов;
     - класс :class:`.BaseCinemate` от которого наследуются все остальные
       классы проекта;
     - классы :class:`.BaseImage` и :class:`.BaseSlug` в которые вынесен общий
@@ -13,9 +14,88 @@
       времени в формате ISO.
 
 """
+import yaml
+import __main__ as main
 from datetime import datetime
 from functools import wraps
+from getpass import getpass
+from os.path import exists, expanduser, join
 from six import add_metaclass, iteritems, PY2
+from six.moves import input
+
+
+def _open(*args, **kwargs):  # pragma: no cover
+    """ Используется для подмены содержимого при тестировании
+    """
+    return open(*args, **kwargs)
+
+
+def _exists(*args, **kwargs):  # pragma: no cover
+    return exists(*args, **kwargs)
+
+
+class CinemateConfig(object):
+    """ Класс для чтения и сохранения конфигурации.
+    """
+    module = yaml
+    filename = join(expanduser('~'), '.cinemate')
+    _auth = {}.fromkeys(('username', 'password', 'apikey', 'passkey'))
+    _config = {'auth': _auth}
+
+    def __init__(self):
+        interactive = not hasattr(main, '__file__')
+        if interactive and not self.exists:  # pragma: no cover
+            self.interactive_input()
+            self.save()
+        elif not self.exists:
+            msg = (
+                'Config file {cfg} does not exists. Create it manually '
+                'or create cinemate instance in interactive mode:\n'
+                '>>> from cinemate import Cinemate\n'
+                '>>> cin = Cinemate()'
+            )
+            raise IOError(msg.format(cfg=self.filename))
+        else:
+            self.load()
+
+    @property
+    def exists(self, filename=None):
+        return _exists(filename or self.filename)
+
+    def interactive_input(self):  # pragma: no cover
+        """ Запрашивает у пользователя данные и сохраняет их.
+        """
+        self._auth['username'] = input('Username: ')
+        self._auth['password'] = getpass('Password: ')
+        self._auth['passkey'] = getpass('Passkey: ')
+        self._auth['apikey'] = getpass('Apikey: ')
+
+    def apply(self, obj):
+        """ Сохраняет пользовательские настройки в указанный объект.
+        """
+        for field, value in iteritems(self._auth):
+            setattr(obj, field, value)
+
+    def load(self, filename=None):
+        """ Загружает пользовательские данные из файла.
+        :param filename: имя файла, если не задано используется значение
+            по умолчанию: ``~/.cinemate`` или ``%HOME%\.cinemate``
+            в зависимости от операционной системы
+        :type filename: :py:class:`str`
+        """
+        with _open(filename or self.filename) as cfg:
+            self._config = self.module.load(cfg)
+            self._auth = self._config['auth']
+
+    def save(self, filename=None):
+        """ Сохраняет пользовательские настройки в файл.
+        :param filename: имя файла
+        :type filename: :py:class:`str`
+        """
+        for field, value in iteritems(self._auth):
+            self._config['auth'][field] = value
+        with _open(filename or self.filename, 'w') as cfg:
+            self.module.dump(self._config, cfg, default_flow_style=False)
 
 
 class CommonMeta(type):

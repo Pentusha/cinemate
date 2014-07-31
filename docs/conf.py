@@ -25,7 +25,7 @@ extensions = [
 intersphinx_mapping = {'python': ('http://docs.python.org/3.4', None)}
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = []
 
 # The suffix of source filenames.
 source_suffix = '.rst'

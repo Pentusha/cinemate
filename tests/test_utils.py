@@ -1,8 +1,23 @@
 # coding=utf-8
-from datetime import datetime
 import pytest
-
+from datetime import datetime
+from mock import patch
 from cinemate import utils
+
+
+def test_config_load(mock_config):
+    assert getattr(mock_config, '_auth') == {
+        'username': 'MOCK_USERNAME',
+        'password': 'MOCK_PASSWORD',
+        'passkey': 'MOCK_PASSKEY',
+        'apikey': 'MOCK_APIKEY',
+    }
+
+
+@patch('cinemate.utils._open')
+def test_config_save(open_mock, mock_config):
+    mock_config.save()
+    open_mock.assert_called_once_with(mock_config.filename, 'w')
 
 
 @pytest.mark.parametrize(
@@ -47,10 +62,10 @@ def test_get_cinemate(cin):
     try:
         utils.__get_cinemate__(dummy1())
     except AttributeError:
-        assert False, 'Dummy1 raises AttributeError'
+        pytest.fail('Dummy1 raises AttributeError')
     try:
         utils.__get_cinemate__(dummy2())
     except AttributeError:
-        assert False, 'Dummy2 raises AttributeError'
+        pytest.fail('Dummy2 raises AttributeError')
     with pytest.raises(AttributeError):
         utils.__get_cinemate__(dummy3())

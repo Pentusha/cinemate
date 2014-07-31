@@ -4,11 +4,10 @@ from pytest_httpretty import stub_get
 from six import u
 
 from cinemate.person import Photo
-from tests.mock import reqresp as rr
 
 
 @pytest.mark.httpretty
-def test_person(cin):
+def test_person(cin, rr):
     stub_get(**rr['person'])
     person = cin.person.get(3971)
     assert isinstance(person, cin.person)
@@ -30,7 +29,7 @@ def test_person(cin):
 
 
 @pytest.mark.httpretty
-def test_person_movies(cin):
+def test_person_movies(cin, rr):
     stub_get(**rr['person.movies'])
     movies = cin.person(43083).movies()
     assert isinstance(movies, dict)
@@ -57,7 +56,7 @@ def test_person_movies(cin):
 
 
 @pytest.mark.httpretty
-def test_person_search(cin):
+def test_person_search(cin, rr):
     stub_get(**rr['person.search'])
     lst = cin.person.search(u('гиленхол'))
     assert isinstance(lst, list)
