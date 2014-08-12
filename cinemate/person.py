@@ -3,7 +3,7 @@
     Модуль реализует класс персоны Person,
     а также класс фотографии персоны Photo
 """
-from .utils import require, BaseCinemate, BaseImage
+from .utils import require, BaseCinemate, BaseImage, CompareMixin
 
 
 class Photo(BaseImage):
@@ -19,7 +19,7 @@ class Photo(BaseImage):
     """
 
 
-class Person(BaseCinemate):
+class Person(CompareMixin, BaseCinemate):
     """ Класс персоны.
 
     :param person_id: идентификатор персоны на cinemate.cc
