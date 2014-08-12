@@ -98,6 +98,22 @@ class CinemateConfig(object):
             self.module.dump(self._config, cfg, default_flow_style=False)
 
 
+class CompareMixin(object):
+    id = None
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+
+class FieldsCompareMixin(object):
+    fields = []
+
+    def __eq__(self, other):
+        is_dict = isinstance(self.fields, dict)
+        fields = self.fields.keys() if is_dict else self.fields
+        return all(getattr(self, f) == getattr(other, f) for f in fields)
+
+
 class CommonMeta(type):
     """ Метакласс для реализации __служебных_методов__.
     """
@@ -116,7 +132,7 @@ class BaseCinemate(object):
     """
 
 
-class BaseImage(BaseCinemate):
+class BaseImage(FieldsCompareMixin, BaseCinemate):
     fields = ('small', 'medium', 'big')
 
     def __init__(self, small, medium, big):
@@ -180,6 +196,9 @@ class BaseSlug(BaseCinemate):
         """
         finder = (slug for slug, rus in iteritems(cls.mapping) if rus == name)
         return next(finder, None)
+
+    def __eq__(self, other):
+        return self.slug == other.slug or self.name == other.name
 
     def __unicode__(self):
         return '<{class_name}: {name}>'.format(

@@ -13,7 +13,8 @@ from .stats import Stats
 
 class Cinemate(BaseCinemate):
     """ Класс для хранения пользовательских настроек, таких как
-        имя пользователя, пароль, passkey, apikey.
+    имя пользователя, пароль, passkey, apikey.
+
     :param username: имя пользователя
     :type username: :py:class:`str`
     :param password: пароль пользователя
@@ -44,6 +45,7 @@ class Cinemate(BaseCinemate):
 
     def api_get(self, url, passkey=False, apikey=False, **kwargs):
         """ Получить страницу API.
+
         :param url: адрес получаемой страницы, полностью или p/a/th?param=1
         :type url: :py:class:`str`
         :param passkey: использовать для запроса passkey

@@ -7,7 +7,8 @@ from datetime import date, datetime
 from six import iteritems
 from six.moves import map
 from .lists import countries, genres
-from .utils import require, parse_date, BaseCinemate, BaseImage, BaseSlug
+from .utils import (require, parse_date, BaseCinemate, BaseImage, BaseSlug,
+                    CompareMixin, FieldsCompareMixin)
 
 
 class Country(BaseSlug):
@@ -32,7 +33,7 @@ class Genre(BaseSlug):
     mapping = genres
 
 
-class Title(BaseCinemate):
+class Title(FieldsCompareMixin, BaseCinemate):
     """ Заголовки фильма на разных языках.
 
     :param russian: название фильма на русском языке
@@ -81,7 +82,7 @@ class Poster(BaseImage):
     """
 
 
-class Release(BaseCinemate):
+class Release(FieldsCompareMixin, BaseCinemate):
     """ Даты релиза фильма.
 
     :param world: дата выхода фильма в прокат
@@ -89,6 +90,8 @@ class Release(BaseCinemate):
     :param russia: дата выхода фильма в российский прокат
     :type russia: :py:class:`str`
     """
+    fields = 'world', 'russia'
+
     def __init__(self, world=None, russia=None):
         self.world = parse_date(world)
         self.russia = parse_date(russia)
@@ -98,7 +101,7 @@ class Release(BaseCinemate):
         return '<Release {fields}>'.format(fields=fields)
 
 
-class Rating(BaseCinemate):
+class Rating(FieldsCompareMixin, BaseCinemate):
     """ Рейтинг фильма imdb и kinopoisk.
 
     :param votes: количесвто отданных голосов
@@ -106,6 +109,8 @@ class Rating(BaseCinemate):
     :param rating: рейтинг фильма
     :type rating: :py:class:`float`
     """
+    fields = 'votes', 'rating'
+
     def __init__(self, votes=0, rating=0):
         self.votes = int(votes)
         self.rating = float(rating)
@@ -117,7 +122,7 @@ class Rating(BaseCinemate):
         )
 
 
-class Movie(BaseCinemate):
+class Movie(CompareMixin, BaseCinemate):
     """ Класс реализуюзий фильмы, сериалы, короткометражки.
 
     :param movie_id: идентификатор фильма на cinemate.cc
@@ -240,7 +245,7 @@ class Movie(BaseCinemate):
         url = 'movie'
         params = {'id': self.id}
         req = self.cinemate.api_get(url, apikey=True, params=params)
-        movie = req.json().get('movie')
+        movie = req.json().get('movie', {})
         return self.cinemate.movie.from_dict(movie)
 
     @classmethod
@@ -333,7 +338,7 @@ class Movie(BaseCinemate):
         url = 'movie.list'
         params = {k: v for k, v in iteritems(params) if v is not None}
         req = cls.cinemate.api_get(url, apikey=True, params=params)
-        movies = req.json().get('movie', {})
+        movies = req.json().get('movie', [])
         return list(map(cls.from_dict, movies))
 
     def __unicode__(self):

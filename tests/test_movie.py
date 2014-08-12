@@ -8,76 +8,57 @@ from six import u
 from cinemate.movie import Title, Poster, Release, Rating, Country, Genre
 
 
+def test_poster():
+    poster = 'http://c.cinemate.cc/media/images/poster/2010/68675/1298810716'
+    poster = Poster(
+        small=poster + '.small.jpg',
+        medium=poster + '.medium.jpg',
+        big=poster + '.big.jpg'
+    )
+    assert str(poster) == '<Poster big/medium/small>'
+
+
+def test_title():
+    title = Title(u('Криминальная фишка от Генри'), 'Henry\'s Crime')
+    assert str(title) == 'Henry\'s Crime'
+
+
+def test_release():
+    release = Release(world='2011-04-07', russia='2011-04-07')
+    assert str(release) == '<Release russia/world>'
+
+
+def test_rating():
+    imdb = Rating(rating=5.9, votes=12147)
+    assert str(imdb) == '<Rating rating=5.9 votes=12147>'
+    kp = Rating(rating=5.0, votes=12000)
+    assert imdb != kp
+
+
+def test_country():
+    country = Country(name=u('США'))
+    assert str(country) == '<Country: usa>'
+
+
 @pytest.mark.httpretty
 def test_movie(cin, rr):
     stub_get(**rr['movie'])
     mov = cin.movie.get(68675)
     assert str(mov) == '<Movie 68675 Henry\'s Crime>'
-    assert mov.id == 68675
-    assert mov.type == 'movie'
-    test_title = Title(u('Криминальная фишка от Генри'), 'Henry\'s Crime')
-    assert mov.title.english == test_title.english
-    assert str(mov.title) == 'Henry\'s Crime'
-    assert mov.title.russian == test_title.russian
-    assert mov.title.original == test_title.original
-    assert mov.year == 2010
-    poster = 'http://c.cinemate.cc/media/images/poster/2010/68675/1298810716'
-    test_poster = Poster(
-        small=poster + '.small.jpg',
-        medium=poster + '.medium.jpg',
-        big=poster + '.big.jpg'
-    )
-    assert str(mov.poster) == '<Poster big/medium/small>'
-    assert mov.poster.small == test_poster.small
-    assert mov.poster.medium == test_poster.medium
-    assert mov.poster.big == test_poster.big
-    description = u(
-        'Встречайте Генри – самого унылого парня в Америке. Он сидит в своей б'
-        'удке у дороги, взимая пошлину с проезжающих. Казалось, в его жизни ни'
-        'что не может измениться. Но однажды сомнительный приятель попросил Ге'
-        'нри подождать его у крыльца главного банка в Буффало... В результате '
-        '– четыре года тюрьмы по ложному обвинению в ограблении. Но пройдет вр'
-        'емя, и Генри вернется к тому самому банку, чтобы взять свое…'
-    )
-    assert mov.description == description
-    assert mov.runtime == 108
-    test_release = Release(world='2011-04-07', russia='2011-04-07')
-    assert str(mov.release) == '<Release russia/world>'
-    assert mov.release.world == test_release.world
-    assert mov.release.russia == test_release.russia
-    test_imdb = Rating(rating=5.9, votes=12147)
-    assert str(mov.imdb) == '<Rating rating=5.9 votes=12147>'
-    assert mov.imdb.rating == test_imdb.rating
-    assert mov.imdb.votes == test_imdb.votes
-    test_kp = Rating(rating=6.2, votes=11673)
-    assert mov.kinopoisk.rating == test_kp.rating
-    assert mov.kinopoisk.votes == test_kp.votes
-    test_country = Country(name=u('США'))
-    assert isinstance(mov.country, list)
-    assert len(mov.country) == 1
-    assert isinstance(mov.country[0], Country)
-    assert str(mov.country[0]) == u('<Country: usa>')
-    assert mov.country[0].name == test_country.name
-    test_genre = Genre(name=u('комедия'))
-    assert isinstance(mov.genre, list)
-    assert len(mov.genre) == 1
-    assert isinstance(mov.genre[0], Genre)
-    assert str(mov.genre[0]) == u('<Genre: comedy>')
-    assert mov.genre[0].name == test_genre.name
 
-    test_director = cin.person(163239, name=u('Малькольм Венвилль'))
-    assert isinstance(mov.director, list)
-    assert len(mov.director) == 1
-    # assert str(mov.director[0]) == u('<Person 163239 Малькольм Венвилль>')
-    assert isinstance(mov.director[0], cin.person)
-    assert mov.director[0].name == test_director.name
+    assert mov.country == [Country(name=u('США'))]
+    assert mov.genre == [Genre(name=u('комедия'))]
 
-    test_actor = cin.person(2624, name=u('Киану Ривз'))
-    assert isinstance(mov.cast, list)
-    assert len(mov.cast) == 15
-    # assert str(mov.cast[0]) == u('<Person 2624 Киану Ривз>')
-    assert isinstance(mov.cast[0], cin.person)
-    assert mov.cast[0].name == test_actor.name
+    assert mov.director == [
+        cin.person(163239, name=u('Малькольм Венвилль'))
+    ]
+
+    actors = (
+        2624, 1219, 2856, 112, 2243, 9803, 13257, 39646,
+        9040, 5933, 67860, 108757, 190286, 148348, 190285,
+    )
+    assert mov.cast == list(map(cin.person, actors))
+
     assert mov.url == 'http://cinemate.cc/movie/68675/'
 
     stub_get(**rr['movie_one_person'])
@@ -88,11 +69,11 @@ def test_movie(cin, rr):
 @pytest.mark.httpretty
 def test_movie_list(cin, rr):
     stub_get(**rr['movie.list'])
-    lst = cin.movie.list()
-    assert isinstance(lst, list)
-    assert len(lst) == 10
-    assert isinstance(lst[0], cin.movie)
-    assert lst[0].id == 131001
+    movies = (
+        131001, 131657, 109767, 83460, 66450,
+        135826, 105524, 122874, 133159, 52036,
+    )
+    assert cin.movie.list() == list(map(cin.movie, movies))
 
     stub_get(**rr['movie.list_with_params'])
     lst = cin.movie.list(
@@ -100,10 +81,12 @@ def test_movie_list(cin, rr):
         order_to=datetime(1989, 7, 4),
         order_by='release_date'
     )
-    assert isinstance(lst, list)
-    assert len(lst) == 10
-    assert isinstance(lst[0], cin.movie)
-    assert lst[0].id == 24424
+    movies = (
+        24424, 6685, 114718, 32660, 117681,
+        38105, 18319, 7139, 14832, 19272,
+    )
+    assert lst == list(map(cin.movie, movies))
+
     with pytest.raises(ValueError):
         cin.movie.list(
             order_from=date(1988, 7, 4),
@@ -115,7 +98,5 @@ def test_movie_list(cin, rr):
 def test_movie_search(cin, rr):
     stub_get(**rr['movie.search'])
     lst = cin.movie.search(u('Пираты кариб'))
-    assert isinstance(lst, list)
-    assert len(lst) == 6
-    assert isinstance(lst[0], cin.movie)
-    assert lst[0].id == 120787
+    movies = 120787, 68669, 1787, 2194, 15869, 7412
+    assert lst == list(map(cin.movie, movies))
