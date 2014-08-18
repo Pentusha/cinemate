@@ -8,10 +8,16 @@ env:
   - TOXENV=py34
   - TOXENV=pypy
   - TOXENV=pypy3
-# command to install dependencies
-install: "pip install -r requirements_tests.txt"
-# command to run tests
+install: pip install -r requirements_tests.txt
 script:
   - tox -e $TOXENV
 after_success:
   - coveralls
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: pentusha
+  password:
+    secure: bAcpHRViFdnqbDvRcI1m0P+V9rOeiGaHH4sbf4JP0zadW/e9UvAYUYR9V6ZknbWE49wXsLqfgr92z75wlil9dN6FitWTi7ghqtSkSBp4LJrkZ1bUr9SEFBrf1Ug3grF4kSLyZi1eLCHt2VkXMNCzC0AKJKh5qCOuQudCdYorDKQ=
+  on:
+    branch: master
