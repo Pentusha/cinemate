@@ -1,4 +1,5 @@
 -r requirements.txt
+tox >= 1.7.2
 mock
 pytest
 pytest-httpretty
