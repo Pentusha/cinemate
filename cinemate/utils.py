@@ -102,7 +102,7 @@ class CompareMixin(object):
     id = None
 
     def __eq__(self, other):
-        return self.id == other.id
+        return type(self) is type(other) and self.id == other.id
 
 
 class FieldsCompareMixin(object):
