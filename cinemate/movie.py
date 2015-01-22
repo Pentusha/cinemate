@@ -246,7 +246,7 @@ class Movie(CompareMixin, BaseCinemate):
         params = {'id': self.id}
         req = self.cinemate.api_get(url, apikey=True, params=params)
         movie = req.json().get('movie', {})
-        return self.cinemate.movie.from_dict(movie)
+        return self.from_dict(movie)
 
     @classmethod
     @require('apikey')

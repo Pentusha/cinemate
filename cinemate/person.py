@@ -71,7 +71,7 @@ class Person(CompareMixin, BaseCinemate):
         params = {'id': self.id}
         req = self.cinemate.api_get(url, apikey=True, params=params)
         person = req.json().get('person', {})
-        return self.cinemate.person.from_dict(person)
+        return self.from_dict(person)
 
     @classmethod
     @require('apikey')

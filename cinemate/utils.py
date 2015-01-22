@@ -16,11 +16,12 @@
 """
 import yaml
 import __main__ as main
+from collections import defaultdict
 from datetime import datetime
 from functools import wraps
 from getpass import getpass
 from os.path import exists, expanduser, join
-from six import add_metaclass, iteritems, PY2
+from six import add_metaclass, callable, iteritems, PY2
 from six.moves import input
 
 
@@ -117,13 +118,35 @@ class FieldsCompareMixin(object):
 class CommonMeta(type):
     """ Метакласс для реализации __служебных_методов__.
     """
+    _instances = defaultdict(dict)
+
     def __new__(mcs, name, bases, attrs):
         method = attrs.get('__unicode__')
         if method:
             to_str = lambda x: PY2 and method(x).encode('utf-8') or method(x)
             attrs.setdefault('__str__', to_str)
             attrs.setdefault('__repr__', to_str)
+
+        fetch = attrs.get('fetch')
+        if callable(fetch):
+            def wrapper(*args, **kwargs):
+                """ Обёртка для метода fetch. Каждый раз после вызова метода
+                    экземпляр класса добавляется в _instances.
+                """
+                instance = args[0]  # self
+                result = fetch(*args, **kwargs)
+                mcs._instances[name][instance.id] = instance
+                return result
+            attrs['fetch'] = wrapper
         return super(CommonMeta, mcs).__new__(mcs, name, bases, attrs)
+
+    def __call__(cls, *args, **kwargs):
+        instance = super(CommonMeta, cls).__call__(*args, **kwargs)
+        fetch = getattr(cls, 'fetch', None)
+        if not callable(fetch):  # у объекта нет метода fetch
+            return instance
+        instances = cls._instances[cls.__name__]
+        return instances.get(instance.id, instance)
 
 
 @add_metaclass(CommonMeta)
@@ -262,9 +285,8 @@ def parse_datetime(source):
     :param source: исходная строка с датой и временем
     :type source: :py:class:`str`
     """
-    if not source:
-        return
-    return datetime.strptime(source, '%Y-%m-%dT%H:%M:%S')
+    if source:
+        return datetime.strptime(source, '%Y-%m-%dT%H:%M:%S')
 
 
 def parse_date(source):
@@ -273,6 +295,5 @@ def parse_date(source):
     :param source: исходная строка с датой
     :type source: :py:class:`str`
     """
-    if not source:
-        return
-    return datetime.strptime(source, '%Y-%m-%d')
+    if source:
+        return datetime.strptime(source, '%Y-%m-%d')
