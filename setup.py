@@ -5,6 +5,7 @@
 import os
 import sys
 import codecs
+from uuid import uuid1
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from pip.req import parse_requirements
@@ -35,7 +36,7 @@ def get_version():
 
 def get_requirements(filename):
     requirements_path = os.path.join(basedir, filename)
-    requirements = parse_requirements(requirements_path)
+    requirements = parse_requirements(requirements_path, session=uuid1())
     return [str(r.req) for r in requirements]
 
 
