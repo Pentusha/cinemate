@@ -82,18 +82,18 @@ Cinemate - реализация API сайта `cinemate.cc`_ на языке py
 .. _pep-287: http://www.python.org/dev/peps/pep-0287/
 .. _tox: https://pypi.python.org/pypi/tox
 
-.. |version| image:: http://badge.fury.io/py/cinemate.png
+.. |version| image:: http://badge.fury.io/py/cinemate.svg
    :alt: PyPI version
    :target: http://badge.fury.io/py/cinemate
 .. |docs| image:: https://readthedocs.org/projects/cinemate/badge/?version=latest
-    :alt: Docs status
-    :target: https://readthedocs.org/builds/cinemate/
+   :alt: Docs status
+   :target: https://readthedocs.org/builds/cinemate/
 .. |build| image:: http://secure.travis-ci.org/Pentusha/cinemate.png?branch=master
    :alt: Build status
    :target: https://travis-ci.org/Pentusha/cinemate
-.. |coverage| image:: http://coveralls.io/repos/Pentusha/cinemate/badge.png?branch=master
+.. |coverage| image:: http://coveralls.io/repos/Pentusha/cinemate/badge.svg?branch=master
    :alt: Tests Coverage
    :target: https://coveralls.io/r/Pentusha/cinemate
-.. |wheel| image:: http://pypip.in/wheel/cinemate/badge.png
+.. |wheel| image:: http://pypip.in/wheel/cinemate/badge.svg?style=flat
    :alt: Wheel Status
    :target: https://pypi.python.org/pypi/cinemate/
