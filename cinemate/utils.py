@@ -123,7 +123,8 @@ class CommonMeta(type):
     def __new__(mcs, name, bases, attrs):
         method = attrs.get('__unicode__')
         if method:
-            to_str = lambda x: PY2 and method(x).encode('utf-8') or method(x)
+            def to_str(x):
+                return PY2 and method(x).encode('utf-8') or method(x)
             attrs.setdefault('__str__', to_str)
             attrs.setdefault('__repr__', to_str)
 
