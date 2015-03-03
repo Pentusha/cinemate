@@ -47,25 +47,14 @@ def test_parse_date(iso_input, expected):
 
 
 def test_required(cin):
-    dummy = type('Dummy', (object,), {
+    foo = type('Foo', (object,), {
         'cinemate': cin,
         'decorated': utils.require('test')(lambda: None)
     })
+    bar = type('Bar', (object,), {
+        'decorated': utils.require('test')(lambda: None)
+    })
     with pytest.raises(AttributeError):
-        dummy().decorated()
-
-
-def test_get_cinemate(cin):
-    dummy1 = type('Cinemate', (object,), {})
-    dummy2 = type('Dummy', (object,), {'cinemate': cin})
-    dummy3 = type('Mummy', (object,), {})
-    try:
-        utils.__get_cinemate__(dummy1())
-    except AttributeError:
-        pytest.fail('Dummy1 raises AttributeError')
-    try:
-        utils.__get_cinemate__(dummy2())
-    except AttributeError:
-        pytest.fail('Dummy2 raises AttributeError')
+        foo().decorated()
     with pytest.raises(AttributeError):
-        utils.__get_cinemate__(dummy3())
+        bar().decorated()

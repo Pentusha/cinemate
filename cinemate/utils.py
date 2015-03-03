@@ -21,7 +21,7 @@ from datetime import datetime
 from functools import wraps
 from getpass import getpass
 from os.path import exists, expanduser, join
-from six import add_metaclass, callable, iteritems, PY2
+from six import add_metaclass, callable, iteritems, iterkeys, PY2
 from six.moves import input
 
 
@@ -111,7 +111,7 @@ class FieldsCompareMixin(object):
 
     def __eq__(self, other):
         is_dict = isinstance(self.fields, dict)
-        fields = self.fields.keys() if is_dict else self.fields
+        fields = iterkeys(self.fields) if is_dict else self.fields
         return all(getattr(self, f) == getattr(other, f) for f in fields)
 
 
@@ -149,6 +149,19 @@ class CommonMeta(type):
         return instances.get(instance.id, instance)
 
 
+class CinemateDuckMeta(type):
+    """ Метакласс для проверки того, что объект содержит экземпляр cinemate.
+    """
+    def __instancecheck__(self, instance):
+        return hasattr(instance, 'cinemate')
+
+
+@add_metaclass(CinemateDuckMeta)
+class Cinematable(object):
+    """ Утинная типизация для всех классов использующихся в проекте.
+    """
+
+
 @add_metaclass(CommonMeta)
 class BaseCinemate(object):
     """ От этого класса наследуются все остальные классы проекта.
@@ -156,7 +169,7 @@ class BaseCinemate(object):
 
 
 class BaseImage(FieldsCompareMixin, BaseCinemate):
-    fields = ('small', 'medium', 'big')
+    fields = 'small', 'medium', 'big'
 
     def __init__(self, small, medium, big):
         self.small = small
@@ -251,7 +264,7 @@ class require(object):
             :param kwargs: именованные параметры декорируемой функции
             :type kwargs: :py:class:`dict`
             """
-            cinemate = __get_cinemate__(args[0])  # args[0] == self or cls
+            cinemate = self.get_cinemate(args[0])  # args[0] == self or cls
             if not all(getattr(cinemate, a, None) for a in self.attr_names):
                 msg = '{attr} required to use {cls}.{method} method'.format(
                     attr=', '.join(self.attr_names),
@@ -262,21 +275,19 @@ class require(object):
             return func(*args, **kwargs)
         return wrapper
 
+    @staticmethod
+    def get_cinemate(instance):
+        """ Получение объекта cinemate хранящегося в аттрибутах.
 
-def __get_cinemate__(instance):
-    """ Получение объекта cinemate хранящегося в аттрибутах.
-
-    :param instance: экземпляр какого-нибудь класса
-    :return: объект cinemate
-    :raises AttributeError: Вызывается, если объект не содержит
-        требуемых полей или экземпляра cinemate
-    """
-    if hasattr(instance, 'cinemate'):
-        return getattr(instance, 'cinemate')
-    elif instance.__class__.__name__ == 'Cinemate':  # avoid cycle imports
-        return instance
-    else:
-        raise AttributeError('Object has not cinemate attribute')
+        :param instance: экземпляр какого-нибудь класса
+        :return: объект cinemate
+        :raises AttributeError: Вызывается, если объект не содержит
+            требуемых полей или экземпляра cinemate
+        """
+        if isinstance(instance, Cinematable):
+            return getattr(instance, 'cinemate', instance)
+        else:
+            raise AttributeError('Object has not cinemate attribute')
 
 
 def parse_datetime(source):

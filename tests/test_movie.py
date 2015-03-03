@@ -19,8 +19,9 @@ def test_poster():
 
 
 def test_title():
-    title = Title(u('Криминальная фишка от Генри'), 'Henry\'s Crime')
-    assert str(title) == 'Henry\'s Crime'
+    title1 = title2 = Title(u('Криминальная фишка от Генри'), 'Henry\'s Crime')
+    assert title1 == title2
+    assert str(title1) == 'Henry\'s Crime'
 
 
 def test_release():
