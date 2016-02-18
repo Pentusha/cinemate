@@ -1,4 +1,4 @@
-|version| |docs| |build| |coverage| |wheel|
+|version| |docs| |build| |coverage|
 
 Cinemate - реализация API сайта `cinemate.cc`_ на языке python.
 Реализация использует методы `api v2`_.
