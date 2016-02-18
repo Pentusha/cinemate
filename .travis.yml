@@ -3,7 +3,7 @@ env:
   - TOXENV=flake8
   - TOXENV=docs
   - TOXENV=py27
-  - TOXENV=py32
+  # - TOXENV=py32 pip 8 & travis drop python3.2 support
   - TOXENV=py33
   - TOXENV=py34
   - TOXENV=pypy
