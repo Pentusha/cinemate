@@ -6,6 +6,7 @@ env:
   # - TOXENV=py32 pip 8 & travis drop python3.2 support
   - TOXENV=py33
   - TOXENV=py34
+  - TOXENV=py35
   - TOXENV=pypy
   - TOXENV=pypy3
 install: pip install -r requirements_tests.txt
